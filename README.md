@@ -28,3 +28,5 @@ processing(repetition, abnormal processing, incomplete data processing)
 (3)Some potential types of EDA we plan to do include fluctuation of the price of used cars.
 over time, relationships between each feature with the price, data distribution visualization, and missing data analysis. These can help us gain insights into our dataset before building our machine-learning model.   
 (4)PCA/UMAP/t-SNE will be conducted to evaluate the cluster embedding of the datasets.
+
+Test

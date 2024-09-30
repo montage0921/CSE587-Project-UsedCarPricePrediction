@@ -13,11 +13,14 @@ def get_html(make):
         page.goto(url) 
 
         page.wait_for_load_state("networkidle", timeout=TIMEOUT)
-        counter=1
-        while counter<=5:
+
+        counter=1 
+        total_page=5 # how many pages we would like to open. 22 items/page
+        while counter<=total_page:
             try:
                 print("get the button!")
-                page.wait_for_selector("hzn-button",timeout=5000)
+                page.wait_for_selector("hzn-button",timeout=5000) # this is a shadow root
+                # handle shadow root
                 page.evaluate_handle('''() => {
                     const hznButton = document.querySelector('div.see-more hzn-button[variant="secondary"]')
                     const shadowRoot = hznButton.shadowRoot;
@@ -25,10 +28,10 @@ def get_html(make):
                     button.click();  // Click the button inside the shadow root
                     }''')
                 counter+=1
-                time.sleep(1)
+                time.sleep(1) # stop 1s after each click to be like a human being (x
 
-                if counter==5:
-                    page.wait_for_selector("hzn-button",timeout=5000)
+                if counter==total_page:
+                    page.wait_for_selector("hzn-button",timeout=50000) # wait the whole page finishes loading
             except:
                 print("No more 'see more matches' buttons found. Reach the end of the page")
                 break
@@ -40,4 +43,7 @@ html=get_html("honda")
 # print(html)
 tree=HTMLParser(html)
 print(len(tree.css("a.scct--make-model-info-link")))
-tree.css("div")
+link_tags=tree.css("a.scct--make-model-info-link")
+
+links=[i.attributes['href'] for i in link_tags]
+print(links)

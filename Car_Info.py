@@ -61,58 +61,75 @@ class Car_Info:
 
     def scrape_car_info(self):
 
-        links=self._get_links()
+        links = self._get_links()
 
         for link in links:
-            url=f"https://www.carmax.com{link}"
+            url = f"https://www.carmax.com{link}"
 
-            with sync_playwright() as p:
-                browser = p.chromium.launch(headless=False) 
-                page = browser.new_page()
-                page.goto(url) 
-                
-                try:
-                    page.wait_for_load_state("networkidle", timeout=9000)
-                except TimeoutError:
-                    logging.error(f"{link} loading takes too long...")
-                    continue
+            try:
+                with sync_playwright() as p:
+                    browser = p.chromium.launch(headless=False) 
+                    page = browser.new_page()
+                    page.goto(url) 
+                    
+                    try:
+                        # Wait for page to load or skip if it times out
+                        page.wait_for_load_state("networkidle", timeout=90000)
+                    except TimeoutError:
+                        print(f"{link} loading takes too long... Skipping.")
+                        continue  # Skip to the next link
 
-                html=page.inner_html("body")
-                tree=HTMLParser(html)
+                    # Extract the page content
+                    html = page.inner_html("body")
+                    tree = HTMLParser(html)
 
-                car={} # save one car's info
+                    car = {}  # Save one car's info
 
-                # extract year, make and model
-                description=tree.css_first("h1#car-header-basic-car-info").text()
-                descr_list=description.split(" ") 
-                year=descr_list[0]
-                make=descr_list[1]
-                model=' '.join(descr_list[2:])
+                    # Extract year, make, and model
+                    description = tree.css_first("h1#car-header-basic-car-info").text()
+                    descr_list = description.split(" ") 
+                    year = descr_list[0]
+                    make = descr_list[1]
+                    model = ' '.join(descr_list[2:])
 
-                car["year"]=year
-                car["make"]=make
-                car["model"]=model
+                    car["year"] = year
+                    car["make"] = make
+                    car["model"] = model
 
-                # extract price
-                price_literal=tree.css_first("span#default-price-display").text()
-                price=int(price_literal.replace('$','').replace(',','').replace('*',''))
-                car["price"]=price
-                # extract mileage
-                mileage_literal=tree.css_first("span.car-header-mileage").text()
-                mileage=int(mileage_literal.split(" ")[0].replace('K',''))*1000
-                car["mileage"]=mileage
+                    # Extract price
+                    price_literal = tree.css_first("span#default-price-display").text()
+                    price = int(price_literal.replace('$', '').replace(',', '').replace('*', ''))
+                    car["price"] = price
 
-                # extract motor, drive type and color
-                badges=tree.css("div.tombstone-badge")
-                for badge in badges:
-                    sub_label=badge.css_first('div.tombstone-badge-sub')
-                    if sub_label:
-                        feature_name=sub_label.text()
-                        feature_value=badge.text().replace(feature_name,"").strip()
-                        car[feature_name]=feature_value
-                
-                # append car data to the data list
-                self.car_data.append(car)
+                    # Extract mileage
+                    mileage_literal = tree.css_first("span.car-header-mileage").text()
+                    mileage = int(mileage_literal.split(" ")[0].replace('K', '')) * 1000
+                    car["mileage"] = mileage
+
+                    # Extract motor, drive type, and color
+                    badges = tree.css("div.tombstone-badge")
+                    for badge in badges:
+                        sub_label = badge.css_first('div.tombstone-badge-sub')
+                        if sub_label:
+                            feature_name = sub_label.text()
+                            if "Engine" in feature_name:
+                                engine_value = badge.text().strip()
+                                engine_value_list = engine_value.split(", ")
+                                if len(engine_value_list)>=2:
+                                    car["cylinders"] = engine_value_list[0]
+                                    car["fuel"] = engine_value_list[1]
+                                continue
+                            feature_value = badge.text().replace(feature_name, "").strip()
+                            car[feature_name] = feature_value
+                    
+                    # Append car data to the data list
+                    self.car_data.append(car)
+
+            except Exception as e:
+                # Catch any exception and skip the link
+                print(f"Error occurred for {link}: {str(e)}. Skipping.")
+                continue  # Continue to the next link
+
 
     def get_car_data(self):
         df=pd.DataFrame(self.car_data)
@@ -121,10 +138,11 @@ class Car_Info:
         folder_path=r"C:\Users\19692\Downloads\UB CS\2024 Fall\Homework\CES 587\CSE587-Project-UsedCarPricePrediction\scraped_data"
         
         if not os.path.exists(folder_path):
-            os.makedir(folder_path)
+            os.makedirs(folder_path)
 
+        timestamp = time.strftime("%Y%m%d-%H%M%S") # add a time stamp in csv's file name
         # save the CSV file to the folder
-        file_path=os.path.join(folder_path,f'{self.keyword}.csv')
+        file_path=os.path.join(folder_path,f'{self.keyword}_{timestamp}.csv')
         df.to_csv(file_path,index=False)
         print(f"Data saved to {file_path}")
         return df

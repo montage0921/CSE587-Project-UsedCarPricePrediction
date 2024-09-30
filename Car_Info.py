@@ -4,6 +4,7 @@ import requests as r
 import time
 import logging
 import pandas as pd
+import os
 
 class Car_Info:
     def __init__(self,keyword,pages):
@@ -61,8 +62,6 @@ class Car_Info:
     def scrape_car_info(self):
 
         links=self._get_links()
-        print(links)
-        print(len(links)) 
 
         for link in links:
             url=f"https://www.carmax.com{link}"
@@ -117,9 +116,20 @@ class Car_Info:
 
     def get_car_data(self):
         df=pd.DataFrame(self.car_data)
+
+        # define the folder path
+        folder_path=r"C:\Users\19692\Downloads\UB CS\2024 Fall\Homework\CES 587\CSE587-Project-UsedCarPricePrediction\scraped_data"
+        
+        if not os.path.exists(folder_path):
+            os.makedir(folder_path)
+
+        # save the CSV file to the folder
+        file_path=os.path.join(folder_path,f'{self.keyword}.csv')
+        df.to_csv(file_path,index=False)
+        print(f"Data saved to {file_path}")
         return df
 
-honda=Car_Info("tesla",10)
+honda=Car_Info("honda",0)
 honda.scrape_car_info()
 data=honda.get_car_data()
 print(data)

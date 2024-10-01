@@ -5,7 +5,7 @@ Please put your team's information here. delete this message after you have done
 
 Team Number: 2   
 Team Member:  
-● 50608573 Te Shi teshi@buffalo.edu   
+● 50608573 Te Shi teshi@buffalo.edu (git_id:montage0921)    
 ● 50388599 Shijie Zhou shijiezh@buffalo.edu   
 ● 50602483 Jiabao Yao jyao27@buffalo.edu   
 ● 50606804 Chao Wu cwu64@buffalo.edu

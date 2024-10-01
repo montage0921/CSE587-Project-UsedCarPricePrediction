@@ -1,0 +1,12 @@
+year,make,model,price,mileage,Miles per gallon,cylinders,fuel,Drive type,Transmission,Color,one owner?,No Flood/Frame Damage,Good Odometer,Miles per gallon equivalent (MPGe),Motor,Range (when new),Time to fully charge battery (240V)
+2021,Porsche,Macan ,43998,22000,19 city/23 hwy,4-cyl,Turbo Gas,All Wheel Drive,Automatic,Purple/Tan,False,False,False,,,,
+2021,Porsche,Macan S,46998,49000,18 city/24 hwy,6-cyl,Turbo Gas,All Wheel Drive,Automatic,Black/Tan,False,False,False,,,,
+2019,Porsche,Cayenne ,44998,45000,19 city/23 hwy,6-cyl,Turbo Gas,All Wheel Drive,Automatic,Blue/Red,False,False,False,,,,
+2021,Porsche,Macan ,40998,38000,19 city/23 hwy,4-cyl,Turbo Gas,All Wheel Drive,Automatic,Black/Black,False,False,False,,,,
+2021,Porsche,Macan ,47998,20000,19 city/23 hwy,4-cyl,Turbo Gas,All Wheel Drive,Automatic,Black/Red,False,False,False,,,,
+2019,Porsche,Cayenne ,51998,12000,19 city/23 hwy,6-cyl,Turbo Gas,All Wheel Drive,Automatic,Black/Black,False,False,False,,,,
+2021,Porsche,Taycan Electric 4S,72998,6000,,,,All Wheel Drive,,Red/Tan,False,False,False,79 city/80 hwy,Electric,199 miles,9.5 hours
+2020,Porsche,Cayenne ,46998,40000,19 city/23 hwy,6-cyl,Turbo Gas,All Wheel Drive,Automatic,Gray/Black,False,False,False,,,,
+2017,Porsche,911 Carrera,79998,40000,20 city/29 hwy,6-cyl,Turbo Gas,Rear Wheel Drive,Manual 6 Speed,Silver/Black,False,False,False,,,,
+2024,Porsche,Macan T,61998,4000,19 city/25 hwy,4-cyl,Turbo Gas,All Wheel Drive,Automatic,White/Tan,False,False,False,,,,
+2019,Porsche,Macan ,33998,45000,19 city/23 hwy,4-cyl,Turbo Gas,All Wheel Drive,Automatic,Blue/Black,False,False,False,,,,

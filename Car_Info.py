@@ -38,7 +38,7 @@ class Car_Info:
                         button.click();  // Click the button inside the shadow root
                         }''')
                     counter+=1
-                    time.sleep(1) # stop 1s after each click to be like a human being (x
+                    time.sleep(0.5) # stop 1s after each click to be like a human being (x
 
                     if counter==total_page:
                         page.wait_for_selector("hzn-button",timeout=50000) # wait the whole page finishes loading
@@ -73,12 +73,18 @@ class Car_Info:
                     page.goto(url) 
                     
                     try:
+                        page.evaluate("window.scrollBy(0, 3200);") # use to solve lazy loading
+                        
                         # Wait for page to load or skip if it times out
-                        page.wait_for_load_state("networkidle", timeout=90000)
+                        # page.wait_for_load_state("networkidle", timeout=9000)
+                        page.wait_for_selector("div.history-hightlights-columns",timeout=9000)
+                        print("got it!")
                     except TimeoutError:
                         print(f"{link} loading takes too long... Skipping.")
                         continue  # Skip to the next link
-
+                    
+                       
+                    
                     # Extract the page content
                     html = page.inner_html("body")
                     tree = HTMLParser(html)
@@ -121,9 +127,32 @@ class Car_Info:
                                 continue
                             feature_value = badge.text().replace(feature_name, "").strip()
                             car[feature_name] = feature_value
+                  
                     
-                    # Append car data to the data list
-                    self.car_data.append(car)
+
+                    conditons = page.evaluate('''() => {
+                        const shadowRoots = document.querySelectorAll('div.history-hightlights-columns hzn-stack');
+                        
+                        text=shadowRoots[0].textContent
+                        return text
+                    }''')
+                    # shadow_info=1 OwnerNo flood or frame damageNo odometer problems
+                    new_condition = ""  # Create a new string to store the result
+
+                    for i in shadow_info:
+                        if i == 'N':
+                            new_condition += ','  # Insert a comma before 'N'
+                        new_condition += i  # Add the current character to the new string
+                    new_condition = new_condition.split(",")
+                    car["owner"]= new_condition[0]
+                    car["frame_damage"]=new_condition[1]
+                    car["Odometer_problem"]=new_condition[2]
+
+
+                    
+                    
+                # Append car data to the data list
+                self.car_data.append(car)
 
             except Exception as e:
                 # Catch any exception and skip the link
@@ -147,8 +176,7 @@ class Car_Info:
         print(f"Data saved to {file_path}")
         return df
 
-honda=Car_Info("honda",0)
+honda=Car_Info("kia",0)
 honda.scrape_car_info()
 data=honda.get_car_data()
 print(data)
-

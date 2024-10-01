@@ -3,15 +3,16 @@ from playwright.async_api import async_playwright, TimeoutError as PlaywrightTim
 import pandas as pd
 import os
 import asyncio
+import time
 
 class Car_Info:
     def __init__(self, keyword, pages, max_concurrency):
         self.keyword = keyword  # "honda","sedan","red+car"(please use + to concat each word)...
-        self.pages = pages  # 22 pcs of info per page
+        self.pages = pages  # total cars=pages x 22
         self.max_concurrency = max_concurrency # number of concurrency tasks
         self.car_data = [] # store all extracted used car information
 
-    # go to search page and extract links of 
+    # Go to search page and get required pages
     async def _get_html(self):
         TIMEOUT = 900000
         url = f"https://www.carmax.com/cars?search={self.keyword}"
@@ -24,11 +25,12 @@ class Car_Info:
             await page.wait_for_load_state("networkidle", timeout=TIMEOUT)
 
             counter = 1
-            total_page = self.pages  # How many pages we would like to open, 23 items per page
+            total_page = self.pages
             while counter <= total_page:
                 try:
                     print("See More Matches!")
-                    await page.wait_for_selector("hzn-button", timeout=5000)  # this is a shadow root
+                    # this is the "see more " button and it is a shadow root
+                    await page.wait_for_selector("hzn-button", timeout=5000)  
                     # handle shadow root
                     await page.evaluate_handle('''() => {
                         const hznButton = document.querySelector('div.see-more hzn-button[variant="secondary"]')
@@ -37,16 +39,18 @@ class Car_Info:
                         button.click();  // Click the button inside the shadow root
                     }''')
                     counter += 1
-                    await asyncio.sleep(0.5)  # stop 1s after each click to mimic human behavior
+                    await asyncio.sleep(0.5)  # stop 0.5s after each click to mimic human behavior
 
                     if counter == total_page:
                         await page.wait_for_selector("hzn-button", timeout=50000)  # wait for the page to finish loading
+
                 except Exception:
                     print("No more 'see more matches' buttons found. Reached the end of the page")
                     break
 
             return await page.inner_html("body")
 
+    # Extract links for all individual car displayed on the search page
     async def _get_links(self):
         html = await self._get_html()
         tree = HTMLParser(html)
@@ -54,10 +58,12 @@ class Car_Info:
         links = [i.attributes['href'] for i in link_tags if 'href' in i.attributes]
         return links
 
+    # Extract all necessary features in a car's info page
+    # year, make, model, price(USD), mileage, cylinders, fuel types,Miles per gallon, drive types, transmission, color, owners,condition (damage or not)
     async def _extract_car_info(self, html, page):
         tree = HTMLParser(html)
 
-        car = {}  # Save one car's info
+        car = {}  # save one car's info
 
         # Extract year, make, and model
         description = tree.css_first("h1#car-header-basic-car-info").text()
@@ -80,7 +86,7 @@ class Car_Info:
         mileage = int(mileage_literal.split(" ")[0].replace('K', '')) * 1000
         car["mileage"] = mileage
 
-        # Extract motor, drive type, and color
+        # Extract motor, drive type, cylinders, fuel, color etc.
         badges = tree.css("div.tombstone-badge")
         for badge in badges:
             sub_label = badge.css_first('div.tombstone-badge-sub')
@@ -97,6 +103,7 @@ class Car_Info:
                 car[feature_name] = feature_value
 
         # Extract conditions (Handling Shadow DOM)
+        # Conditions include # of past owner, frame damage or not and odometer problem
         conditons = await page.evaluate('''() => {
             const shadowRoots = document.querySelectorAll('div.history-hightlights-columns hzn-stack');
             if (shadowRoots.length > 0) {
@@ -113,6 +120,8 @@ class Car_Info:
 
         return car
 
+    # Scrape a car's info page
+    # semaphore provided by playwright limits the number of concurrency tasks
     async def scrape_page(self, url, semaphore, browser):
         async with semaphore:
             try:
@@ -130,6 +139,7 @@ class Car_Info:
             except PlaywrightTimeoutError:
                 print(f"{url} loading takes too long... Skipping.")
 
+    # Scrape all links
     async def scrape(self):
         links = await self._get_links()
         semaphore = asyncio.Semaphore(self.max_concurrency)  # Set up semaphore for concurrency

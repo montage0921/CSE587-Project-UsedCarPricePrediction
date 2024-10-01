@@ -60,7 +60,7 @@ class Car_Info:
 
     # Extract all necessary features in a car's info page
     # year, make, model, price(USD), mileage, cylinders, fuel types,Miles per gallon, drive types, transmission, color, owners,condition (damage or not)
-    async def _extract_car_info(self, html, page):
+    async def _extract_car_info(self, html, conditions):
         tree = HTMLParser(html)
 
         car = {}  # save one car's info
@@ -102,25 +102,21 @@ class Car_Info:
                 feature_value = badge.text().replace(feature_name, "").strip()
                 car[feature_name] = feature_value
 
-        # Extract conditions (Handling Shadow DOM)
-        # Conditions include # of past owner, frame damage or not and odometer problem
-        conditons = await page.evaluate('''() => {
-            const shadowRoots = document.querySelectorAll('div.history-hightlights-columns hzn-stack');
-            if (shadowRoots.length > 0) {
-                return shadowRoots[0].textContent;
-            }
-            return "";
-        }''')
-
-        new_condition = ",".join([i for i in conditons if i == 'N']).split(",")
-
-        car["owner"] = new_condition[0] if len(new_condition) > 0 else "N/A"
-        car["frame_damage"] = new_condition[1] if len(new_condition) > 1 else "N/A"
-        car["Odometer_problem"] = new_condition[2] if len(new_condition) > 2 else "N/A"
+        # condition
+        new_conditions=""
+        for i in conditions:
+            if i=='N':
+                new_conditions+=","
+            new_conditions+=i
+        condition_array=new_conditions.split(",")
+        print(condition_array)
+        car["owner"] = condition_array[0] if len(condition_array) > 0 else "N/A"
+        car["frame_damage"] = condition_array[1] if len(condition_array) > 1 else "N/A"
+        car["Odometer_problem"] = condition_array[2] if len(condition_array) > 2 else "N/A"
 
         return car
 
-    # Scrape a car's info page
+    # Scrape one single car's info page
     # semaphore provided by playwright limits the number of concurrency tasks
     async def scrape_page(self, url, semaphore, browser):
         async with semaphore:
@@ -128,11 +124,23 @@ class Car_Info:
                 page = await browser.new_page()
                 await page.goto(url)
                 await page.evaluate("window.scrollBy(0, 3200);")  # solve lazy loading
-
+                
                 await page.wait_for_selector("div.history-hightlights-columns", timeout=9000)
+            
                 html = await page.inner_html("body")
 
-                car = await self._extract_car_info(html, page)
+                # Extract conditions (Handling Shadow DOM)
+                # Conditions include # of past owner, frame damage or not and odometer problem
+                # conditions info is contained in the shadowroot so page.evaluate() is needed to handle them
+                conditions = await page.evaluate('''() => {
+                    const shadowRoots = document.querySelectorAll('div.history-hightlights-columns hzn-stack');
+                    if (shadowRoots.length > 0) {
+                        return shadowRoots[0].textContent;
+                    }
+                    return "";
+                }''')
+               
+                car = await self._extract_car_info(html, conditions)
                 self.car_data.append(car)
                 print("Data extracted from:", url)
                 await page.close()
@@ -169,7 +177,7 @@ class Car_Info:
         return df
 
 async def main():
-    car_scraper = Car_Info("mazada", 1, max_concurrency=2)
+    car_scraper = Car_Info("lexus", 1, max_concurrency=2)
     await car_scraper.scrape()
     car_scraper.get_car_data()
 

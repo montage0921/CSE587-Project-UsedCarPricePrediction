@@ -80,7 +80,7 @@ class Car_Info:
 
         # Extract price
         price_literal = tree.css_first("span#default-price-display").text()
-        if price_literal != "Price unavailable":
+        if "unavailable" not in price_literal:
             price = int(price_literal.replace('$', '').replace(',', '').replace('*', ''))
             car["price"] = price
         else:
@@ -125,7 +125,7 @@ class Car_Info:
                 browser=await p.chromium.launch(headless=False)
                 page=await browser.new_page()
                 await page.goto(report_url)
-                await page.wait_for_load_state("networkidle", timeout=9000)
+                await page.wait_for_load_state("networkidle", timeout=15000)
                 html=await page.inner_html("body")
 
                 tree=HTMLParser(html)
@@ -164,7 +164,7 @@ class Car_Info:
                 await page.goto(url)
                 await page.evaluate("window.scrollBy(0, 3200);")  # solve lazy loading
                 
-                await page.wait_for_selector("div.history-hightlights-columns", timeout=9000)
+                await page.wait_for_selector("div.history-hightlights-columns", timeout=15000)
             
                 html = await page.inner_html("body")
 
@@ -234,8 +234,28 @@ class Car_Info:
 
 async def main():
     car_brands = [
-        "fiat", "hyundai", "infiniti", "jaguar", "jeep"
+        "Land Rover",
+        "Lexus",
+        "Lincoln",
+        "Mazda",
+        "Mercedes-Benz",
+        "Mercury",
+        "Mini",
+        "Mitsubishi",
+        "Morgan",
+        "Nissan",
+        "Pontiac",
+        "Porsche",
+        "Ram",
+        "Rover",
+        "Saturn",
+        "Subaru",
+        "Tesla",
+        "Toyota",
+        "Volkswagen",
+        "Volvo"
     ]
+
 
     for car in car_brands:
         car_scraper = Car_Info(keyword=car, pages=30, max_concurrency=4)

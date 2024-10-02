@@ -189,9 +189,14 @@ class Car_Info:
                 
 
                 car = await self._extract_car_info(html, conditions,stock_number)
-                self.car_data.append(car)
-                print("Data extracted from:", url)
+                if car is not None:
+                    self.car_data.append(car)
+                    print("Data extracted from:", url)
+                else:
+                    print(f"Failed to extract data from {url}")
+                
                 await page.close()
+                
             except PlaywrightTimeoutError:
                 print(f"{url} loading takes too long... Skipping.")
 

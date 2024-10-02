@@ -225,8 +225,16 @@ class Car_Info:
         return df
 
 async def main():
-    car_scraper = Car_Info("bmw", 3, max_concurrency=4)
-    await car_scraper.scrape()
-    car_scraper.get_car_data()
+    car_brands = [
+        "acura", "alfa-romeo", "aston-martin", "audi", "bmw", "buick", "cadillac",
+        "chevrolet", "chrysler", "datsun", "dodge", "ferrari", "fiat", "ford", 
+        "gmc", "harley-davidson", "honda", "hyundai", "infiniti", "jaguar", 
+        "jeep"
+    ]
+
+    for car in car_brands:
+        car_scraper = Car_Info(keyword=car, pages=25, max_concurrency=4)
+        await car_scraper.scrape()
+        car_scraper.get_car_data()
 
 asyncio.run(main())

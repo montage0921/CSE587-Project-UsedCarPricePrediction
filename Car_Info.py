@@ -62,7 +62,7 @@ class Car_Info:
 
     # Extract all necessary features in a car's info page
     # year, make, model, price(USD), mileage, cylinders, fuel types,Miles per gallon, drive types, transmission, color, owners,condition (damage or not)
-    async def _extract_car_info(self, html, conditions,stock_number):
+    async def _extract_car_info(self, car_page, html, conditions,stock_number):
         tree = HTMLParser(html)
 
         car = {}  # save one car's info
@@ -120,12 +120,14 @@ class Car_Info:
 
         report_url=f"https://www.carmax.com/car/{stock_number}/vehicle-history"
 
+        await car_page.close() # close car's individual page after extract all necessary infomation
+
         async with async_playwright() as p:
             try:
                 browser=await p.chromium.launch(headless=False)
                 page=await browser.new_page()
                 await page.goto(report_url)
-                await page.wait_for_load_state("networkidle", timeout=15000)
+                await page.wait_for_load_state("networkidle", timeout=8000)
                 html=await page.inner_html("body")
 
                 tree=HTMLParser(html)
@@ -164,7 +166,7 @@ class Car_Info:
                 await page.goto(url)
                 await page.evaluate("window.scrollBy(0, 3200);")  # solve lazy loading
                 
-                await page.wait_for_selector("div.history-hightlights-columns", timeout=15000)
+                await page.wait_for_selector("div.history-hightlights-columns", timeout=8000)
             
                 html = await page.inner_html("body")
 
@@ -191,14 +193,15 @@ class Car_Info:
                 ''')
                 
 
-                car = await self._extract_car_info(html, conditions,stock_number)
+                car = await self._extract_car_info(page,html, conditions,stock_number)
                 if car is not None:
                     self.car_data.append(car)
                     print("Data extracted from:", url)
                 else:
                     print(f"Failed to extract data from {url}")
                 
-                await page.close()
+                # await page.close()
+                
 
             except PlaywrightTimeoutError:
                 print(f"{url} loading takes too long... Skipping.")
@@ -234,19 +237,6 @@ class Car_Info:
 
 async def main():
     car_brands = [
-        "Land Rover",
-        "Lexus",
-        "Lincoln",
-        "Mazda",
-        "Mercedes-Benz",
-        "Mercury",
-        "Mini",
-        "Mitsubishi",
-        "Morgan",
-        "Nissan",
-        "Pontiac",
-        "Porsche",
-        "Ram",
         "Rover",
         "Saturn",
         "Subaru",

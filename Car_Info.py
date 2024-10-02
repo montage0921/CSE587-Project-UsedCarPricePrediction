@@ -223,7 +223,7 @@ class Car_Info:
         df = pd.DataFrame(self.car_data)
 
         # Define the folder path
-        folder_path = r"C:\Users\19692\Downloads\UB CS\2024 Fall\Homework\CES 587\CSE587-Project-UsedCarPricePrediction\scraped_data"
+        folder_path = r"D:\Courses\Data Intensive Computing\Proj1\CSE587-Project-UsedCarPricePrediction\scraped_data"
 
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
@@ -236,20 +236,16 @@ class Car_Info:
         return df
 
 async def main():
-    car_brands = [
-        "Rover",
-        "Saturn",
-        "Subaru",
-        "Tesla",
-        "Toyota",
-        "Volkswagen",
-        "Volvo"
-    ]
+    # read car_brands
+    with open('manufacturer_names.txt', 'r') as file:
+        car_brands = [line.strip() for line in file]
+    print(car_brands)
 
 
     for car in car_brands:
         car_scraper = Car_Info(keyword=car, pages=30, max_concurrency=4)
         await car_scraper.scrape()
         car_scraper.get_car_data()
+
 
 asyncio.run(main())

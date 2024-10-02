@@ -80,8 +80,11 @@ class Car_Info:
 
         # Extract price
         price_literal = tree.css_first("span#default-price-display").text()
-        price = int(price_literal.replace('$', '').replace(',', '').replace('*', ''))
-        car["price"] = price
+        if price_literal != "Price unavailable":
+            price = int(price_literal.replace('$', '').replace(',', '').replace('*', ''))
+            car["price"] = price
+        else:
+            car["price"]="Price unavailable"
 
         # Extract mileage
         mileage_literal = tree.css_first("span.car-header-mileage").text()
@@ -196,7 +199,7 @@ class Car_Info:
                     print(f"Failed to extract data from {url}")
                 
                 await page.close()
-                
+
             except PlaywrightTimeoutError:
                 print(f"{url} loading takes too long... Skipping.")
 
@@ -231,14 +234,11 @@ class Car_Info:
 
 async def main():
     car_brands = [
-        "acura", "alfa-romeo", "aston-martin", "audi", "bmw", "buick", "cadillac",
-        "chevrolet", "chrysler", "datsun", "dodge", "ferrari", "fiat", "ford", 
-        "gmc", "harley-davidson", "honda", "hyundai", "infiniti", "jaguar", 
-        "jeep"
+        "fiat", "hyundai", "infiniti", "jaguar", "jeep"
     ]
 
     for car in car_brands:
-        car_scraper = Car_Info(keyword=car, pages=25, max_concurrency=4)
+        car_scraper = Car_Info(keyword=car, pages=30, max_concurrency=4)
         await car_scraper.scrape()
         car_scraper.get_car_data()
 

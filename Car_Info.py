@@ -9,8 +9,9 @@ class Car_Info:
     def __init__(self, keyword, pages, max_concurrency):
         self.keyword = keyword  # "honda","sedan","red+car"(please use + to concat each word)...
         self.pages = pages  # total cars=pages x 22
-        self.max_concurrency = max_concurrency # number of concurrency tasks
+        self.max_concurrency = max_concurrency # number of concurrency tasks （<=4 i guess...)
         self.car_data = [] # store all extracted used car information
+        self.data_processed_counter=0 # how many data processed so far
 
     # Go to search page and get required pages
     async def _get_html(self):
@@ -26,8 +27,9 @@ class Car_Info:
 
             counter = 1
             total_page = self.pages
+            # handling pagination
             while counter <= total_page:
-                try:
+                try: 
                     print("See More Matches!")
                     # this is the "see more " button and it is a shadow root
                     await page.wait_for_selector("hzn-button", timeout=5000)  
@@ -60,7 +62,7 @@ class Car_Info:
 
     # Extract all necessary features in a car's info page
     # year, make, model, price(USD), mileage, cylinders, fuel types,Miles per gallon, drive types, transmission, color, owners,condition (damage or not)
-    async def _extract_car_info(self, html, conditions):
+    async def _extract_car_info(self, html, conditions,stock_number):
         tree = HTMLParser(html)
 
         car = {}  # save one car's info
@@ -109,11 +111,45 @@ class Car_Info:
                 new_conditions+=","
             new_conditions+=i
         condition_array=new_conditions.split(",")
-        print(condition_array)
         car["owner"] = condition_array[0] if len(condition_array) > 0 else "N/A"
         car["frame_damage"] = condition_array[1] if len(condition_array) > 1 else "N/A"
         car["Odometer_problem"] = condition_array[2] if len(condition_array) > 2 else "N/A"
 
+        report_url=f"https://www.carmax.com/car/{stock_number}/vehicle-history"
+
+        async with async_playwright() as p:
+            try:
+                browser=await p.chromium.launch(headless=False)
+                page=await browser.new_page()
+                await page.goto(report_url)
+                await page.wait_for_load_state("networkidle", timeout=9000)
+                html=await page.inner_html("body")
+
+                tree=HTMLParser(html)
+
+                # extract VIN
+                VIN=tree.css("div.decode-box-row.row.odd")[0].css("div")[2].text()
+                car["VIN"]=VIN
+
+                # extract car class: midsize, compact, CUV(crossover utility vehicle)...
+                car_class=tree.css("div.decode-box-row.row")[1].css("div")[2].text()
+                car["class"]=car_class
+
+                # extract vehicy history
+                history=tree.css("div#at-glance div.section-data div.col-12.col-md-6.col-lg-4")
+                
+                # extract state title brand, auction brand, accident/damage, open recall check, insurance loss
+                # odometer check, certified pre-owned, service/repair
+                # Electric Car Only: Miles per gallon equivalent (MPGe), range, time to fully charge
+                for info in history:
+                    feature=info.css_first("p.large-title").text()
+                    value=info.css_first("span.card-footer-text-adjustment span").text()
+                    car[feature]=value
+
+            except:
+                return
+        self.data_processed_counter+=1
+        print("number of car extracted:", self.data_processed_counter)
         return car
 
     # Scrape one single car's info page
@@ -140,7 +176,19 @@ class Car_Info:
                     return "";
                 }''')
                
-                car = await self._extract_car_info(html, conditions)
+                # extract stock number
+                # used to check AutoCheck Report of each car: https://www.carmax.com/car/<stock number>/vehicle-history
+                stock_number=await page.evaluate('''()=>{
+                        const shadowRoots=document.querySelectorAll("div#stock-and-vin span.stock-and-vin-text")
+                        if (shadowRoots.length>0){
+                            return shadowRoots[1].textContent  
+                        }
+                        return ""                          
+                    }
+                ''')
+                
+
+                car = await self._extract_car_info(html, conditions,stock_number)
                 self.car_data.append(car)
                 print("Data extracted from:", url)
                 await page.close()
@@ -177,7 +225,7 @@ class Car_Info:
         return df
 
 async def main():
-    car_scraper = Car_Info("lexus", 1, max_concurrency=2)
+    car_scraper = Car_Info("bmw", 3, max_concurrency=4)
     await car_scraper.scrape()
     car_scraper.get_car_data()
 

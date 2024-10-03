@@ -29,4 +29,5 @@ processing(repetition, abnormal processing, incomplete data processing)
 over time, relationships between each feature with the price, data distribution visualization, and missing data analysis. These can help us gain insights into our dataset before building our machine-learning model.   
 (4)PCA/UMAP/t-SNE will be conducted to evaluate the cluster embedding of the datasets.
 
-Test
+dataset_link:
+https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data?resource=download

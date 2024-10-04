@@ -61,7 +61,7 @@ class Data_Reorganization:
 
         for name in name_list:
             data_select = dataset_rename[dataset_rename["make"] == name]
-            data_select_top200 = data_select.head(200)
+            data_select_top200 = data_select.sample(200)
             # 'year' and 'mileage' will fill '0' if "NaN"
             data_select_top200['year'] = data_select_top200['year'].fillna(0).astype(int)
             data_select_top200['mileage'] = data_select_top200['mileage'].fillna(0).astype(int)
@@ -102,6 +102,20 @@ class Data_Reorganization:
 '''
 ans = Data_Reorganization()
 # scrapping data
-ans.combine_data()
+scrpping_data = ans.combine_data()
 # scrapping data + dataset sampling
-ans.merge_data()
+# ans.merge_data()
+# dataset_samling = ans.dataset_rename()
+
+# Define the folder path
+folder_path = r"/Users/jiabaoyao/Study Abroad/Projects/Data Intensive Computing/proj_phrase_1/CSE587-Project-UsedCarPricePrediction"
+
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+df1 = pd.DataFrame(scrpping_data)
+# df2 = pd.DataFrame(dataset_samling)
+# Save the CSV file to the folder
+file_path1 = os.path.join(folder_path, f'scrapping_data.csv')
+# file_path2 = os.path.join(folder_path, f'dataset_samling.csv')
+df1.to_csv(file_path1, index = False)
+# df2.to_csv(file_path2, index = False)

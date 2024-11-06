@@ -32,6 +32,7 @@ Dataset is obtained by scraping carmax.com. The scrape script is Car_info.py in 
 > EDA
 
 "EDA" folder contains each group memember's ipynb files for EDA operations
+`~/Phase I/EDA`
 
 
 # Phase II
@@ -42,3 +43,26 @@ CSE587 Phase II report.pdf contains all the work we did for Project Phase II, in
 > Model
 
 There are four corresponding folders to anaylysis and answer the questions proposed in phase I.
+
+**Question 1:** What features could be affected by mileage? (Te Shi)  
+**Question 2:** Do different car classes exhibit significant and distinct characteristics across features? (Te Shi)
+
+**Question 3:** Does color matter for used car prices and how does it affect them?  (Jiabao Yao)  
+`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb`  
+`Model Path: ~/Phase II/Model_Q3_4_Jiabao_Yao`
+
+**Question 4:** What attributes are associated with fuel for used cars? (Jiabao Yao)  
+`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb`  
+`Model Path: ~/Phase II/Model_Q3_4_Jiabao_Yao`
+
+**Question 5:** Does the resale price of a particular brand get influenced by the resale prices of competing brands, and if so, is there a lag effect in this influence? (Chao Wu)
+
+**Question 6:** Is the number of owners a significant factor influencing resale price? Given the current imbalance in the distribution of owner counts, could data augmentation help create a more balanced distribution and enhance the predictive power of this feature? (Chao Wu)
+
+**Question 7:** How do the accidents or damage records of the used cars affect the resale price? (Shijie Zhou)
+**Question 8:**  For used cars with different makes, will the accident record affect the used cars’ price differently? (Shijie Zhou)
+
+
+
+
+

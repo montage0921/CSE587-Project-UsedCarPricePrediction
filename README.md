@@ -70,11 +70,11 @@ There are four corresponding folders to anaylysis and answer the questions propo
 
 **Question 5:** Does the resale price of a particular brand get influenced by the resale prices of competing brands, and if so, is there a lag effect in this influence? (Chao Wu)
 `EDA path: ~/Phase I/EDA/owner_brand_vs_price(Q5_Q6).ipynb`  
-`Model Path&Analysis Path: ~/Phase II/Model_Q5_6_Chao_Wu`
+`Model Path&Analysis Path: ~/Phase II/Model_Q5_6_Chao_Wu/brand_price_q5.py`
 
 **Question 6:** Is the number of owners a significant factor influencing resale price? Given the current imbalance in the distribution of owner counts, could data augmentation help create a more balanced distribution and enhance the predictive power of this feature? (Chao Wu)
 `EDA path: ~/Phase I/EDA/owner_brand_vs_price(Q5_Q6).ipynb`  
-`Model Path&Analysis Path: ~/Phase II/Model_Q5_6_Chao_Wu`
+`Model Path&Analysis Path: ~/Phase II/Model_Q5_6_Chao_Wu/smote_owner_price_q6.py`
 
 **Question 7:** How do the accidents or damage records of the used cars affect the resale price? (Shijie Zhou)
 `EDA path: ~/Phase I/EDA/damage_vs_price(Q7).ipynb `

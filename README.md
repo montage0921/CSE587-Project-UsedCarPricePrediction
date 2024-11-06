@@ -42,13 +42,19 @@ CSE587 Phase II report.pdf contains all the work we did for Project Phase II, in
 
 > Model
 
+`Model Path: ~/Phase II/`  
 There are four corresponding folders to anaylysis and answer the questions proposed in phase I.
 
 **Question 1:** What features could be affected by mileage? (Te Shi)  
-**Question 2:** Do different car classes exhibit significant and distinct characteristics across features? (Te Shi)
+`EDA path: ~/Phase II/Model_Q1_2_Te_Shi/Q1_EDA_Refined.ipynb`  
+`Model path: ~/Phase II/Model_Q1_2_Te_Shi/`
+
+**Question 2:** Do different car classes exhibit significant and distinct characteristics across features? (Te Shi)  
+`EDA path: ~/Phase II/Model_Q1_2_Te_Shi/Q2_EDA_Refined.ipynb`  
+`Model path: ~/Phase II/Model_Q1_2_Te_Shi/`
 
 **Question 3:** Does color matter for used car prices and how does it affect them?  (Jiabao Yao)  
-`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb`  
+`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb and Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_EDA(Q4_refine).ipynb`  
 `Model Path: ~/Phase II/Model_Q3_4_Jiabao_Yao`
 
 **Question 4:** What attributes are associated with fuel for used cars? (Jiabao Yao)  

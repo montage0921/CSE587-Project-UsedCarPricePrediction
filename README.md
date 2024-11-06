@@ -54,11 +54,11 @@ There are four corresponding folders to anaylysis and answer the questions propo
 `Model path: ~/Phase II/Model_Q1_2_Te_Shi/`
 
 **Question 3:** Does color matter for used car prices and how does it affect them?  (Jiabao Yao)  
-`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb and Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_EDA(Q4_refine).ipynb`  
+`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb`  
 `Model Path: ~/Phase II/Model_Q3_4_Jiabao_Yao`
 
 **Question 4:** What attributes are associated with fuel for used cars? (Jiabao Yao)  
-`EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb`  
+`EDA path: ～/Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_EDA(Q4_refine).ipynb`  
 `Model Path: ~/Phase II/Model_Q3_4_Jiabao_Yao`
 
 **Question 5:** Does the resale price of a particular brand get influenced by the resale prices of competing brands, and if so, is there a lag effect in this influence? (Chao Wu)

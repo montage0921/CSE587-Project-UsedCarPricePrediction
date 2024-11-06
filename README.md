@@ -66,12 +66,10 @@ There are four corresponding folders to anaylysis and answer the questions propo
 **Question 6:** Is the number of owners a significant factor influencing resale price? Given the current imbalance in the distribution of owner counts, could data augmentation help create a more balanced distribution and enhance the predictive power of this feature? (Chao Wu)
 
 **Question 7:** How do the accidents or damage records of the used cars affect the resale price? (Shijie Zhou)
-
 `EDA path: ~/Phase I/EDA/damage_vs_price(Q7).ipynb ` 
 `Phase II Model&Analysis Path: ~/Phase II/Model_Q7_8_Shijie_Zhou/NeuralNetworkClassifier(Q7)p2.ipynb`
 
 **Question 8:**  For used cars with different makes, will the accident record affect the used cars’ price differently? (Shijie Zhou)
-
 `EDA path: ~/Phase I/EDA/damage_vs_price_make(Q8).ipynb ` 
 `Phase II Model&Analysis Path: ~/Phase II/Model_Q7_8_Shijie_Zhou/Gaussian_Mixture_Model(Q8)p2.ipynb`
 

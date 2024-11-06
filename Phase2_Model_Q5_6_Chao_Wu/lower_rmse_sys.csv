@@ -1,0 +1,49 @@
+make,model,price,year,mileage,owner
+Subaru,Legacy Limited,16998,2015,73000,4
+Subaru,Legacy 2.5I Premium,14599,2014,84000,4
+Subaru,BRZ Limited,17998,2014,65000,4
+Ford,Mustang Ecoboost Premium,18998,2015,81000,4
+Ford,Transit Connect XLT,20998,2018,56000,4
+Ford,Fiesta Titanium,14998,2016,45000,5
+Ford,EcoSport SES,19998,2019,20000,4
+Ford,Explorer Limited,17998,2018,126000,4
+Ford,Fusion SE,13998,2016,80000,4
+Ford,Escape SE,13998,2016,110000,4
+Ford,Fusion SE,12599,2014,97000,4
+Ford,Explorer XLT,26998,2020,54000,4
+Ford,Fiesta SE,12599,2017,80000,5
+Porsche,718 Cayman ,55998,2019,15000,4
+Porsche,Boxster ,40998,2014,25000,5
+Porsche,Taycan Electric ,63998,2021,29000,4
+Porsche,Cayenne ,29998,2018,55000,4
+Porsche,718 Cayman ,47998,2017,45000,4
+Porsche,Macan ,32998,2020,53000,4
+Porsche,Macan ,40998,2021,44000,4
+Porsche,Macan Sport Edition,30998,2018,48000,4
+Porsche,Macan ,31998,2020,50000,4
+Porsche,Macan S,36998,2019,56000,4
+Porsche,Panamera Turbo,63998,2017,45000,4
+Ram,1500 Bighorn,22998,2015,85000,5
+Ram,2500 Laramie,54998,2022,45000,4
+Ram,1500 SLT,19998,2014,100000,4
+Ram,1500 Bighorn,20998,2015,124000,4
+Chevrolet,Sonic LT,12599,2017,91000,4
+Chevrolet,Trax LS,12998,2017,101000,4
+Chevrolet,Silverado 1500 LT,24998,2017,106000,4
+Chevrolet,Corvette Stingray  Z51,41998,2017,30000,4
+Tesla,Model 3 Standard Range Plus,23998,2019,61000,4
+Tesla,Model 3 Mid Range,23998,2018,76000,5
+Ram,1500 Bighorn,22409,2017,83233,5
+Porsche,Jetta R-Line,26560,2019,25000,5
+Ford,QX60 ,19438,2017,76000,5
+Tesla,Fiesta SE,18033,2017,72375,5
+Ram,Soul +,13884,2016,93741,5
+Ford,Jetta R-Line,21249,2014,31107,5
+Ford,QX60 ,16224,2017,76703,5
+Ford,Fiesta Titanium,22022,2013,32408,5
+Ford,Model 3 Mid Range,18987,2017,69038,5
+Ram,Soul +,14937,2016,101289,5
+Ram,Civic LX,20344,2017,80015,5
+Tesla,Sienna LE,17952,2017,77145,5
+Ram,TLX ,13849,2015,92409,5
+Ford,Civic LX,21643,2017,81574,5

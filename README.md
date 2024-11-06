@@ -34,8 +34,8 @@ Dataset is obtained by scraping carmax.com. The scrape script is Car_info.py in 
 "EDA" folder contains each group memember's ipynb files for EDA operations
 `~/Phase I/EDA`
 
-
 # Phase II
+
 > Report
 
 CSE587 Phase II report.pdf contains all the work we did for Project Phase II, including questions refining in phase I, model training and visulizations of each group member.
@@ -47,13 +47,18 @@ There are four corresponding folders to anaylysis and answer the questions propo
 
 **Question 1:** What features could be affected by mileage? (Te Shi)  
 `EDA path: ~/Phase II/Model_Q1_2_Te_Shi/Q1_EDA_Refined.ipynb`  
-`Model path: ~/Phase II/Model_Q1_2_Te_Shi/`
+`Phase II Q1 path: ~/Phase II/Model_Q1_2_Te_Shi/gbc_mileage.ipynb`
+`Phase II Customized Sample Generation Algorithm: ~/Phase II/Model_Q1_2_Te_Shi/generate_uncommon.ipynb`
 
 **Question 2:** Do different car classes exhibit significant and distinct characteristics across features? (Te Shi)  
 `EDA path: ~/Phase II/Model_Q1_2_Te_Shi/Q2_EDA_Refined.ipynb`  
 `Model path: ~/Phase II/Model_Q1_2_Te_Shi/`
+`Phase II Q2 path: ~/Phase II/Model_Q1_2_Te_Shi/decision_tree_class.ipynb`
 
-**Question 3:** Does color matter for used car prices and how does it affect them?  (Jiabao Yao)  
+**Dataset used for Q1 and Q2**
+`Phase II Q2 path: ~/Phase II/Model_Q1_2_Te_Shi/processed_data_mileage.csv`
+
+**Question 3:** Does color matter for used car prices and how does it affect them? (Jiabao Yao)  
 `EDA path: ~/Phase I/EDA/color_fuel_vs_price(Q3_Q4).ipynb and Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_EDA(Q4_refine).ipynb`  
 `Model Path: ~/Phase II/Model_Q3_4_Jiabao_Yao`
 
@@ -66,14 +71,9 @@ There are four corresponding folders to anaylysis and answer the questions propo
 **Question 6:** Is the number of owners a significant factor influencing resale price? Given the current imbalance in the distribution of owner counts, could data augmentation help create a more balanced distribution and enhance the predictive power of this feature? (Chao Wu)
 
 **Question 7:** How do the accidents or damage records of the used cars affect the resale price? (Shijie Zhou)
-`EDA path: ~/Phase I/EDA/damage_vs_price(Q7).ipynb ` 
+`EDA path: ~/Phase I/EDA/damage_vs_price(Q7).ipynb `
 `Phase II Model&Analysis Path: ~/Phase II/Model_Q7_8_Shijie_Zhou/NeuralNetworkClassifier(Q7)p2.ipynb`
 
-**Question 8:**  For used cars with different makes, will the accident record affect the used cars’ price differently? (Shijie Zhou)
-`EDA path: ~/Phase I/EDA/damage_vs_price_make(Q8).ipynb ` 
+**Question 8:** For used cars with different makes, will the accident record affect the used cars’ price differently? (Shijie Zhou)
+`EDA path: ~/Phase I/EDA/damage_vs_price_make(Q8).ipynb `
 `Phase II Model&Analysis Path: ~/Phase II/Model_Q7_8_Shijie_Zhou/Gaussian_Mixture_Model(Q8)p2.ipynb`
-
-
-
-
-

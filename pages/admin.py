@@ -114,9 +114,6 @@ if st.session_state["authentication_status"]:
 
     tab1,tab2,tab3,tab4=st.tabs(["Find","Edit","Delete","Add"])
 
-    
-
-
     with tab1:
         display_search_UI(df)
         

@@ -7,8 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import date,time
 import numpy as np
-from display_logic import *
-from search_logic import *
+from search_widgets_render import *
+from search_result_logic import *
 
 # --------------- Authentication --------------------
 with open('config.yaml') as file:
@@ -115,7 +115,11 @@ if st.session_state["authentication_status"]:
     tab1,tab2,tab3,tab4=st.tabs(["Find","Edit","Delete","Add"])
 
     with tab1:
-        display_search_UI(df)
+        select_all=st.radio("Search from all cars?", options=["Yes","No"],horizontal=True)
+        if select_all=="No":
+            display_search_UI(df)
+        else:
+            display_search_UI_for_all(df)
         
 
 

@@ -33,13 +33,33 @@ def display_filters(df, make, model):
     col1, col2, col3 = st.columns(3)
 
     search3 = st.button("Apply Other Filter", type='primary')
+    if make == "ALL":
+        with col1:
+            fuel_consumption = st.selectbox("Fuel Consumption", options=np.append("ALL", df['miles_per_gallon'].unique()))
+            fuel = st.selectbox("Fuel", options=np.append("ALL", df['fuel'].unique()), index=0)
+            is_auction = st.selectbox("Is Auctioned", options=['ALL', 'Yes', 'No'], index=0)
+            odometer_issue = st.selectbox("Has odometer issue?", options=['ALL', 'Yes', 'No'], index=0)
+            bed_length = st.selectbox("Truck Only", options=np.append("ALL", df['bed_length'].unique()))
+        with col2:
+            transmission = st.selectbox("Transmission", options=np.append("ALL", df['transmission'].unique()))
+            drive_type = st.selectbox("Drive Type", options=np.append("ALL", df['drive_type'].unique()), index=0)
+            accident_condition = st.selectbox("Accidents", options=np.append("ALL", df['accidents'].unique()))
+            certification = st.selectbox("Certification", options=np.append("ALL", df['certification'].unique()))
+            exterior_color = st.selectbox("Exterior Color", options=np.append("ALL", df['exterior_color'].unique()))
+        with col3:
+            owners = st.selectbox("Owners", options=np.append("ALL", df['owners'].unique()))
+            class1 = st.selectbox("Class", options=np.append("ALL", df['class'].unique()))
+            open_recalls = st.selectbox("Number of Open Recalls", options=np.append("ALL", df['open_recalls'].unique()))
+            cylinder = st.selectbox("Number of Cylinders", options=np.append("ALL", df['cylinders'].unique()), index=0)
+            interior_color = st.selectbox("Interior Color", options=np.append("ALL", df['interior_color'].unique()))
 
-    if model == "ALL":
+
+    elif model == "ALL":
         with col1:
             fuel_consumption = st.selectbox("Fuel Consumption", options=np.append("ALL", df[df['make'] == make]['miles_per_gallon'].unique()))
             fuel = st.selectbox("Fuel", options=np.append("ALL", df[df['make'] == make]['fuel'].unique()))
-            is_auction = st.selectbox("Is Auctioned", options=['Yes', 'No'])
-            odometer_issue = st.selectbox("Has odometer issue?", options=['Yes', 'No'])
+            is_auction = st.selectbox("Is Auctioned", options=['Yes', 'No'],index=1)
+            odometer_issue = st.selectbox("Has odometer issue?", options=['Yes', 'No'],index=1)
             bed_length = st.selectbox("Truck Only", options=np.append("ALL", df[df['make'] == make]['bed_length'].unique()))
         with col2:
             transmission = st.selectbox("Transmission", options=np.append("ALL", df[df['make'] == make]['transmission'].unique()))
@@ -51,14 +71,14 @@ def display_filters(df, make, model):
             owners = st.selectbox("Owners", options=np.append("ALL", df[df['make'] == make]['owners'].unique()))
             class1 = st.selectbox("Class", options=np.append("ALL", df[df['make'] == make]['class'].unique()))
             open_recalls = st.selectbox("Number of Open Recalls", options=np.append("ALL", df[df['make'] == make]['open_recalls'].unique()))
-            cylinder = st.selectbox("Number of Cylinders", options=np.append("ALL", df[df['make'] == make]['class'].unique()))
+            cylinder = st.selectbox("Number of Cylinders", options=np.append("ALL", df[df['make'] == make]['cylinders'].unique()))
             interior_color = st.selectbox("Interior Color", options=np.append("ALL", df[df['make'] == make]['interior_color'].unique()))
     else:
         with col1:
             fuel_consumption = st.selectbox("Fuel Consumption", options=np.append("ALL", df[(df['make'] == make) & (df['model'] == model)]['miles_per_gallon'].unique()))
             fuel = st.selectbox("Fuel", options=np.append("ALL", df[(df['make'] == make) & (df['model'] == model)]['fuel'].unique()))
-            is_auction = st.selectbox("Is Auctioned", options=['Yes', 'No'])
-            odometer_issue = st.selectbox("Has odometer issue?", options=['Yes', 'No'])
+            is_auction = st.selectbox("Is Auctioned", options=['Yes', 'No'],index=1)
+            odometer_issue = st.selectbox("Has odometer issue?", options=['Yes', 'No'],index=1)
             bed_length = st.selectbox("Bed Length(Truck Only)", options=np.append("ALL", df[(df['make'] == make) & (df['model'] == model)]['bed_length'].unique()))
         with col2:
             transmission = st.selectbox("Transmission", options=np.append("ALL", df[(df['make'] == make) & (df['model'] == model)]['transmission'].unique()))
@@ -90,7 +110,7 @@ def display_filters(df, make, model):
         "cylinder": cylinder if cylinder=="ALL" else int(cylinder),
         "interior_color": interior_color,
     }, search3
-def display_keyinfo_search(min_price,max_price,min_year,max_year,min_mileage,max_mileage):
+def display_keyinfo_search(min_price=0,max_price=1000000,min_year=2010,max_year=2030,min_mileage=0,max_mileage=1000000):
     col1, col2= st.columns(2)
     set_year=st.radio("Set Range of Year",options=["Yes","No"],index=1,horizontal=True)
     set_price=st.radio("Set Range of Price",options=["Yes","No"],index=1,horizontal=True)

@@ -1,0 +1,27 @@
+cookie:
+  expiry_days: 30
+  key: cookie_signature_key
+  name: cookie_name
+credentials:
+  usernames:
+    admin:
+      email: admin@cse587.com
+      name: admin
+      password: admin # will be hashed automatically by code
+    gary:
+      email: teshi@buffalo.edu
+      name: gary
+      password: nicaiwojiaosha1.A
+  database:
+    host: cse587carpredictor.cl26s0c6w7ut.us-east-2.rds.amazonaws.com
+    user: admin
+    password: 2024cse587!A
+    database: cse587carpredictor
+pre-authorized:
+  emails:
+    - nicaiwojiaosha@gmail.com
+oauth2:
+  google:
+    client_id: 1024192002397-fenkausq6vqrf7denr4l4ebhdll27i5v.apps.googleusercontent.com
+    client_secret: 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
+    redirect_uri: http://localhost:8501/

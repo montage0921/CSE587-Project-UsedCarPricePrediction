@@ -9,6 +9,7 @@ def display_search_UI(df):
     model=make_model["model"]
     min_price,max_price,min_year,max_year,min_mileage,max_mileage=find_range_properties(df,make,model)
 
+    # display selection areas
     with st.expander("Define the search range"):
         ranges,search2=display_keyinfo_search(min_price,max_price,min_year,max_year,min_mileage,max_mileage)
     with st.expander("Apply more filters"):
@@ -30,7 +31,32 @@ def display_search_UI(df):
             st.write(f"Found {len(filtered_df)} matching records.")
             st.write(filtered_df)
 
+# ------------------- Define Search All UI ---------------------------------
+def display_search_UI_for_all(df):
+    make="ALL"
+    model="ALL"
+    
+    with st.expander("Define the search range"):
+        ranges,search2=display_keyinfo_search()
+    with st.expander("Apply more filters"):
+        filters,search3=display_filters(df,make,model)
+    
+    if search2:
+        display_search2(df,model,make,ranges)
+    
+    if search3:
+        filtered_df=filter_price_mileage_year(df,model,make,ranges)
+        
+        filtered_df=filter_other_features(filters,filtered_df)
+        
+        if(len(filtered_df)==0):
+            st.error("No Matches Found")
+        else:
+            st.write(f"Found {len(filtered_df)} matching records.")
+            st.write(filtered_df)
 
+
+# --------------- Helper ----------------------
 def display_search1(df,make,model):
     st.write(model)
     if model=="ALL":
@@ -52,7 +78,9 @@ def display_search2(df,model,make,ranges):
     return filtered_df
 
 def filter_price_mileage_year(df,model,make,ranges):
-    if model=="ALL": # if choose all, then df should include all the models in that make, equivalent to search without setting range
+    if make=="ALL":
+        filtered_df=df.copy()
+    elif model=="ALL": # if choose all, then df should include all the models in that make, equivalent to search without setting range
         filtered_df = df[df['make']==make] 
     else:
         filtered_df=df[df['model']==model]
@@ -73,13 +101,13 @@ def filter_price_mileage_year(df,model,make,ranges):
     return filtered_df
 
 def filter_other_features(filters,filtered_df):
-    # apply filters based on the user inputs
-    # filter=="ALL" means we can skip it
+    
     odometer_issue_bool = True if filters["odometer_issue"] == "Yes" else False
+    
     filtered_df = filtered_df[filtered_df["has_odometer_issue"] == odometer_issue_bool]
+    
     is_auction_bool = True if filters["is_auction"] == "Yes" else False
     filtered_df = filtered_df[filtered_df["is_auction"] == is_auction_bool]
-
 
     if filters["fuel_consumption"] != "ALL":
         filtered_df = filtered_df[filtered_df["miles_per_gallon"] == filters["fuel_consumption"]]
@@ -109,3 +137,4 @@ def filter_other_features(filters,filtered_df):
         filtered_df = filtered_df[filtered_df["interior_color"] == filters["interior_color"]]
     
     return filtered_df
+

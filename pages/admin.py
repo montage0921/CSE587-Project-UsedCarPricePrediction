@@ -9,6 +9,7 @@ from datetime import date,time
 import numpy as np
 from search_widgets_render import *
 from search_result_logic import *
+from edit_logic import *
 
 # --------------- Authentication --------------------
 with open('config.yaml') as file:
@@ -114,14 +115,30 @@ if st.session_state["authentication_status"]:
 
     tab1,tab2,tab3,tab4=st.tabs(["Find","Edit","Delete","Add"])
 
+    # For searching operations
     with tab1:
         select_all=st.radio("Search from all cars?", options=["Yes","No"],horizontal=True)
         if select_all=="No":
             display_search_UI(df)
         else:
             display_search_UI_for_all(df)
-        
+    
+    # For editing operation
+    with tab2:
+        if "edit_mode" not in st.session_state:
+            st.session_state.edit_mode = False
 
+        edit_btn, id = edit_widget()
+        if edit_btn:
+            st.session_state.edit_mode = True
+            st.session_state.edit_id = id
+
+        if st.session_state.edit_mode:
+            res = get_by_id(st.session_state.edit_id, cursor)
+            if res:
+                render_update_widget(conn, cursor, res)
+            else:
+                st.warning(f"No record found with ID {st.session_state.edit_id}")
 
 
 

@@ -92,6 +92,8 @@ boolean_columns = ['accidents', 'is_electric', 'has_odometer_issue']
 df[boolean_columns] = df[boolean_columns].fillna(False)
 print(df.isnull().sum())  # Check for any remaining missing values
 
+df.to_csv("cleaned_for_sql.csv")
+
 print("Processed Successfully!!!!")
 
 # ----------------- Upload CSV to DATABASE ------------------

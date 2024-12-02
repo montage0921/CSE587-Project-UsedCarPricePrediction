@@ -32,7 +32,6 @@ try:
 except Exception as e:
     st.error(e)
 
-st.write(st.session_state)
 # ---------------------- Connect to Database ---------------------------
 
 def connect_to_database():
@@ -45,7 +44,7 @@ def connect_to_database():
     )
     return conn
 
-st.cache_resource(show_spinner="Connecting to database...")
+@st.cache_resource(show_spinner="Connecting to database...")
 def build_connection_with_database():
     conn=connect_to_database()
     cursor=conn.cursor()
@@ -53,15 +52,15 @@ def build_connection_with_database():
     return (conn,cursor)
 
 
-# ------------------ CRUD Operations -----------------------------
-st.cache_data
-def extract_all_data(conn):
+# ------------------  General Data -----------------------------
+@st.cache_data
+def extract_all_data(_conn):
     query="SELECT * from used_cars"
     df=pd.read_sql(query,conn)
     return df
 
-st.cache_data
-def get_general_info(cursor):
+@st.cache_data
+def get_general_info(_cursor):
     query_total_data="SELECT COUNT(*) AS total_data FROM used_cars";
     query_total_brands="SELECT COUNT(DISTINCT make) AS unique_brands FROM used_cars;"
 

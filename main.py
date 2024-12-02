@@ -145,7 +145,7 @@ if __name__ == "__main__":
     
     make=st.selectbox("Make",options=cleaned_df['make'].unique(),index=0)
     original_price=st.number_input("Original Price",min_value=5000,max_value=1000000,step=1000,value=10000)
-    st.selectbox(
+    model=st.selectbox(
             "Model",options=cleaned_df[cleaned_df['make'] == make]['model'].unique(),
             index=0)
     feature_input_map={
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     
     with st.form(key="user_car_info"):
         st.subheader("Enter Your Car's Information!")
-        user_input={"make":make}
+        user_input={"make":make,"model":model}
         col1,col2,col3=st.columns(3)
         columns=[col1,col2,col3]
         counter=0
@@ -188,6 +188,7 @@ if __name__ == "__main__":
     
     if submit:
         tab1,tab2=st.tabs(["Predicted Report","Graph?"])
+        st.write(user_input)
         with tab1:
             predict_price=predictByRandomForest(randomForestRegressor,user_input,df_important_encoded)
             original_price=int(original_price)

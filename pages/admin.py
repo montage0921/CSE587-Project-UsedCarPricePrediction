@@ -11,6 +11,7 @@ from search_widgets_render import *
 from search_result_logic import *
 from edit_logic import *
 from delete_logic import *
+from add_logic import *
 
 # --------------- Authentication --------------------
 with open('config.yaml') as file:
@@ -124,7 +125,7 @@ if st.session_state["authentication_status"]:
         general_info = st.session_state["general_info"]
         general_info_container.empty()  # Clear the container
         with general_info_container:  # Re-render inside the same container
-            with st.expander(general_info, expanded=True):
+            with st.expander(general_info, expanded=False):
                 st.write(display_brand_bar_graph(df))
                 st.write(df)
 
@@ -132,6 +133,7 @@ if st.session_state["authentication_status"]:
     tab1, tab2, tab3, tab4 = st.tabs(["Find", "Edit", "Delete", "Add"])
 
     with tab1:
+        st.subheader("🔍Search A Record")
         select_all = st.radio("Search from all cars?", options=["Yes", "No"], horizontal=True)
         if select_all == "No":
             df = st.session_state["df"]
@@ -141,6 +143,7 @@ if st.session_state["authentication_status"]:
             display_search_UI_for_all(df)
 
     with tab2:
+        st.subheader("✏️Edit A Record")
         if "edit_mode" not in st.session_state:
             st.session_state.edit_mode = False
 
@@ -157,6 +160,7 @@ if st.session_state["authentication_status"]:
                 st.warning(f"No record found with ID {st.session_state.edit_id}")
 
     with tab3:
+        st.subheader("Delete A Record")
         del_btn, id = delete_widget()
         if del_btn:
             try:
@@ -172,6 +176,15 @@ if st.session_state["authentication_status"]:
                     refresh_general_info()
             except Exception as e:
                 st.error(f"Failed to delete record: {e}")
+    
+    with tab4:
+        st.subheader("⬆️Add A New Record")
+        render_add_widget(conn, cursor)
+         
+        if st.session_state.get("record_added", False):  
+            refresh_general_info()  
+            st.session_state["record_added"] = False  
+
 
 elif st.session_state["authentication_status"] == False:
     st.sidebar.warning("Please enter correct username/password")

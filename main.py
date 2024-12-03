@@ -200,6 +200,48 @@ def background_fig():
         unsafe_allow_html=True,
 )
 
+# Function to calculate price range
+def price_range_search(data, car_attributes):
+    # Filter the dataset based on car attributes
+    filtered_cars = data[
+        (data["make"] == car_attributes["make"]) &
+        (data["model"] == car_attributes["model"]) &
+        (data["year"] == car_attributes["year"])
+    ]
+
+    # Calculate the price range
+    if not filtered_cars.empty:
+        min_price = filtered_cars["price"].min()
+        max_price = filtered_cars["price"].max()
+        return min_price, max_price
+    else:
+        return None, None  # Explicitly return None for both min_price and max_price if no match is found
+
+# Function to compare predicted price with the price range
+def price_compare(min_price, max_price, predicted_price, car_attributes):
+    if min_price is not None and max_price is not None:
+        st.write(f"**Price Range for {car_attributes['make']} {car_attributes['model']} ({car_attributes['year']}):**")
+        st.write(f"Minimum Price: ${min_price}")
+        st.write(f"Maximum Price: ${max_price}")
+        st.write(f"Predicted Price: ${predicted_price}")
+
+        # Plot the price range
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.plot([min_price, max_price], [0, 0], color="skyblue", linewidth=10, label="Price Range")
+        ax.scatter(predicted_price, 0, color="red", s=100, label="Predicted Price", zorder=5)
+        ax.text(predicted_price, 0.1, f"${predicted_price}", color="red", fontsize=12, ha="center")
+
+        # Customize plot
+        ax.set_title("Price Range with Predicted Price Highlighted", fontsize=14)
+        ax.set_yticks([])  # Remove y-axis ticks
+        ax.set_xlabel("Price (USD)", fontsize=12)
+        ax.legend()
+        ax.grid(axis="x", linestyle="--", alpha=0.7)
+
+        # Display the plot
+        st.pyplot(fig)
+    else:
+        st.toast("No matching cars found to determine a price range.")
 
 
 if __name__ == "__main__":
@@ -262,6 +304,7 @@ if __name__ == "__main__":
     model=st.selectbox(
             "Model",options=cleaned_df[cleaned_df['make'] == make]['model'].unique(),
             index=0)
+    # year=st.number_input("Year",min_value=2000,max_value=2024,step=1,value=2021)
     feature_input_map={
         'mileage': lambda: st.number_input("Mileage", 0, 200000, step=1000,value=30000),
         'year':lambda:st.number_input("Year", 2010, date.today().year+1, step=1,value=2020),
@@ -298,14 +341,27 @@ if __name__ == "__main__":
                 counter+=1
         submit=st.form_submit_button("Predict",type="primary")
         
-
+    # Define the specific car's attributes
+    car_attributes = {
+        "make":make,
+        "model": model,
+        "year": feature_input_map["year"]
+    }
     
     if submit:
-        tab1,tab2=st.tabs(["Predicted Report","Graph?"])
+        tab1,tab2=st.tabs(["Predicted Report","Nice price?"])
         st.write(user_input)
         with tab1:
             predict_price=predictByRandomForest(randomForestRegressor,user_input,df_important_encoded)
             original_price=int(original_price)
             st.metric(label="Predicted Price",value=round(predict_price,2),delta=-round(original_price-predict_price,2),delta_color="normal")
-        
+        with tab2:
+            min_price, max_price = price_range_search(cleaned_df, car_attributes)
+            if min_price is None or max_price is None:
+                st.toast("No matching cars found to determine a price range.")
+                with st.spinner("Thinking..."):
+                    time.sleep(2) # sleep 2s
+                    st.write("No matching cars found to determine a price range")
+            else:
+                price_compare(min_price, max_price, predict_price, car_attributes)
     

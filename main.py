@@ -9,7 +9,9 @@ from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
-
+import seaborn as sns
+import plotly.express as px
+from pathlib import Path
 # -------------- Constant ----------------------
 
 
@@ -115,8 +117,93 @@ def predictByRandomForest(_model,user_input,df_important_encoded):
     predicted_price = _model.predict(user_data_encoded)
     return predicted_price[0]
 
+def findImportantFeatures(_model, df_encoded):
+    # Extract feature importances from the model
+    feature_importances = _model.feature_importances_
+
+    # Get feature names, excluding 'price'
+    x_train = df_encoded.drop(columns=['price'])
+    important_features = pd.DataFrame({
+        'Feature': x_train.columns,
+        'Importance': feature_importances
+    }).sort_values(by='Importance', ascending=False)
+
+    return important_features.head(10)
+
+# typewriter effect
+def stream_data_common(data, delay: float=0.02):
+	for word in data:
+		yield word + " "
+		time.sleep(delay)
+
+def stream_data_md(text, delay=0.1):
+    placeholder = st.empty()  # Create an empty placeholder
+    streamed_text = ""  # Initialize the text accumulator
+    for word in text.split(" "):  # Split the text into words
+        streamed_text += word + " "  # Add the word and a space
+        placeholder.markdown(streamed_text)  # Update the placeholder
+        time.sleep(delay)  # Add delay for streaming effect
+
+def background_fig():
+
+    # Set page configuration to wide layout
+    st.set_page_config(layout="wide")
+
+    # HTML and CSS for the background image with overlay text and button
+    st.markdown(
+        """
+        <style>
+            .hero-container {
+                position: relative;
+                width: 100%;
+                height: 500px; /* Adjust the height to your preference */
+                background-image: url('https://mystrongad.com/VLB_BerglundVolvoLynchburg/Interactive/Used/Used-Car-page.png'); /* Replace with your image path */
+                background-size: cover;
+                background-position: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .hero-content {
+                text-align: center;
+                color: white;
+            }
+            .hero-title {
+                font-size: 36px;
+                font-weight: bold;
+                margin-bottom: 20px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .hero-button {
+                display: inline-block;
+                background-color: #FFCC00;
+                color: blue;
+                padding: 15px 30px;
+                font-size: 18px;
+                font-weight: bold;
+                border: none;
+                border-radius: 5px;
+                text-decoration: none;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            }
+            .hero-button:hover {
+                background-color: #E6B800;
+            }
+        </style>
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-title">A huge database of over 20,000 cars, easily predicting car prices</div>
+                <a href="#" class="hero-button">PREDICT PRICE</a>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+)
+
+
 
 if __name__ == "__main__":
+    background_fig()
     st.title("🚗Used Car Price Predictor")
     df=get_data() # get dataset csv
 
@@ -132,13 +219,40 @@ if __name__ == "__main__":
     selector=trainKBestSelector(df_encoded)
     important_features=getKBestFeatures(selector,df_encoded) # e.g. ["mileage", "year","color"]
     important_features.append("price")
-    st.write(important_features)
+    # st.write(important_features)
     # --------Train Random Forest Regressor ------- 
     df_important=clean_data(df,important_features)
     df_important_encoded=encoded(df_important)
 
     randomForestRegressor=trainRandomForestRegressor(df_important_encoded)
-    
+
+    # -------- Show the importance data as a table
+    stream_data_md("## 🔍 What Factors Matter Most?")
+    # Get the feature importance
+    importance_df = findImportantFeatures(randomForestRegressor, df_important_encoded)
+    # Create a single container for both the chart and the feature output
+    fig = px.bar(
+        importance_df.head(10),
+        x="Importance",
+        y="Feature",
+        orientation='h',  # Horizontal bars
+        title="Top 10 Most Important Features",
+        labels={'Importance': 'Importance Score', 'Feature': 'Feature Name'},
+        text="Importance"
+    )
+    # Customize the hover behavior
+    fig.update_traces(texttemplate='%{text:.4f}', textposition='outside', hoverinfo='y+x')
+    # Layout adjustments
+    fig.update_layout(
+        height=600,
+        width=800,
+        title_font=dict(size=18, color='darkblue'),
+        xaxis_title="Importance",
+        yaxis_title="Feature",
+        template="plotly_white",
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 
     # predicted_price=predictByRandomForest(randomForestRegressor,user_input,df_important_encoded)
     # ----------Build the UI Dictionary ------------------------------

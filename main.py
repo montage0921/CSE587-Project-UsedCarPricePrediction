@@ -12,14 +12,42 @@ from sklearn.model_selection import GridSearchCV
 import seaborn as sns
 import plotly.express as px
 from pathlib import Path
+import plotly.graph_objects as go
+from xgboost import XGBRegressor
+import pymysql
+import yaml
+from yaml.loader import SafeLoader
 # -------------- Constant ----------------------
 
+# build connection to sql database
+with open('config.yaml') as file:
+    config=yaml.load(file,Loader=SafeLoader)
 
-# read data from csv
+@st.cache_resource
+def connect_to_database():
+    conn = pymysql.connect(
+        host=config['credentials']['database']['host'],
+        port=3306,
+        user=config['credentials']['database']['user'],
+        password=config['credentials']['database']['password'],
+        database=config['credentials']['database']['database']
+    )
+    return conn
+
+# @st.cache_resource(show_spinner="Connecting to database...")
+def build_connection_with_database():
+    conn=connect_to_database()
+    cursor=conn.cursor()
+    st.write("Connect to database successfully!")
+    return (conn,cursor)
+
+
+# read data from sql
 @st.cache_data
-def get_data():
-
-    df=pd.read_csv("carinfo_after_pre_clean.csv")
+def get_data(_conn):
+    extract_all_query="""SELECT * FROM used_cars"""
+    df=pd.read_sql(extract_all_query,_conn)
+    df = df.drop(columns=["id"])
     return df
 
 # data cleaning
@@ -28,7 +56,6 @@ def clean_data(df,list=None):
     df_cleaned_1 = df.dropna(subset = ['exterior_color', 'interior_color', 'fuel','drive_type'])
     df_cleaned = df_cleaned_1[df_cleaned_1['price'] != 0]
     df_unique = df_cleaned.drop_duplicates(subset = 'VIN', keep = False)
-    # df_unique = df_unique.drop(columns = ['Unnamed: 0'])
 
     if list:
         df_unique=df_unique[list]
@@ -62,20 +89,41 @@ def trainKBestSelector(df):
 
     return selector
 
-# get the best feature
-@st.cache_data(show_spinner=f"selecting the best features ")
-def getKBestFeatures(_selector,df):
-    selected_features = _selector.get_support(indices = True)
-    df_without_price=df.drop(columns=['price'])
-    selected_feature_names = df_without_price.columns[selected_features]
+# # get the best feature
+# @st.cache_data(show_spinner=f"selecting the best features ")
+# def getKBestFeatures(_selector,df):
+#     selected_features = _selector.get_support(indices = True)
+#     df_without_price=df.drop(columns=['price'])
+#     selected_feature_names = df_without_price.columns[selected_features]
 
-    # Extract the base feature names
-    base_feature_names = list(set([
-    '_'.join(name.split('_')[:-1]) if '_' in name else name
-    for name in selected_feature_names
-]))
+#     # Extract the base feature names
+#     base_feature_names = list(set([
+#     '_'.join(name.split('_')[:-1]) if '_' in name else name
+#     for name in selected_feature_names
+# ]))
+#     st.write(base_feature_names)
 
+#     return base_feature_names
+
+@st.cache_data(show_spinner="Selecting the best features")
+def getKBestFeatures(_selector, df_encoded, df):
+    selected_features = _selector.get_support(indices=True)
+    df_encoded_without_price = df_encoded.drop(columns=['price'])
+    selected_feature_names = df_encoded_without_price.columns[selected_features].tolist()
+    full_column_names=df.columns.tolist()
+
+    # Extract the basename of features
+    base_feature_names = set()
+    for name in full_column_names:
+        for selected_name in selected_feature_names:
+            if name in selected_name:
+                base_feature_names.add(name)
+
+    
+    base_feature_names = list(base_feature_names)
     return base_feature_names
+
+
 
 @st.cache_resource(show_spinner="Training random forest regressor")
 def trainRandomForestRegressor(df_encoded):
@@ -120,7 +168,6 @@ def predictByRandomForest(_model,user_input,df_important_encoded):
 def findImportantFeatures(_model, df_encoded):
     # Extract feature importances from the model
     feature_importances = _model.feature_importances_
-
     # Get feature names, excluding 'price'
     x_train = df_encoded.drop(columns=['price'])
     important_features = pd.DataFrame({
@@ -207,48 +254,72 @@ def price_range_search(data, car_attributes):
         (data["make"] == car_attributes["make"]) &
         (data["model"] == car_attributes["model"]) &
         (data["year"] == car_attributes["year"])
-    ]
-
+    ]    
     # Calculate the price range
     if not filtered_cars.empty:
+        st.write(filtered_cars)
         min_price = filtered_cars["price"].min()
         max_price = filtered_cars["price"].max()
+        if min_price == max_price:
+            st.toast("no too much data for price searching")        
         return min_price, max_price
     else:
+        st.warning("no similar car found!!")
         return None, None  # Explicitly return None for both min_price and max_price if no match is found
 
 # Function to compare predicted price with the price range
 def price_compare(min_price, max_price, predicted_price, car_attributes):
+    if min_price == None or max_price == None:
+        return
     if min_price is not None and max_price is not None:
-        st.write(f"**Price Range for {car_attributes['make']} {car_attributes['model']} ({car_attributes['year']}):**")
-        st.write(f"Minimum Price: ${min_price}")
-        st.write(f"Maximum Price: ${max_price}")
-        st.write(f"Predicted Price: ${predicted_price}")
+        st.title("Price Range")
+        # Create a custom Plotly figure
+        fig = go.Figure()
 
-        # Plot the price range
-        fig, ax = plt.subplots(figsize=(8, 4))
-        ax.plot([min_price, max_price], [0, 0], color="skyblue", linewidth=10, label="Price Range")
-        ax.scatter(predicted_price, 0, color="red", s=100, label="Predicted Price", zorder=5)
-        ax.text(predicted_price, 0.1, f"${predicted_price}", color="red", fontsize=12, ha="center")
+        # Add the price range as a bar
+        fig.add_trace(go.Scatter(
+            x=[min_price, max_price],
+            y=[1, 1],  # Keep y constant
+            mode='lines',
+            line=dict(color='blue', width=20),
+            name="Price Range"
+        ))
 
-        # Customize plot
-        ax.set_title("Price Range with Predicted Price Highlighted", fontsize=14)
-        ax.set_yticks([])  # Remove y-axis ticks
-        ax.set_xlabel("Price (USD)", fontsize=12)
-        ax.legend()
-        ax.grid(axis="x", linestyle="--", alpha=0.7)
+        # Add predicted price as a point
+        fig.add_trace(go.Scatter(
+            x=[predicted_price],
+            y=[1],
+            mode='markers+text',
+            marker=dict(color='green', size=26),
+            text=["Predicted Price"],
+            textposition="top center",
+            name="Predicted Price"
+        ))
 
-        # Display the plot
-        st.pyplot(fig)
+        # Customize the layout
+        fig.update_layout(
+            xaxis=dict(
+                range=[min_price - 10000, max_price + 10000],  # Adjust range dynamically
+                showgrid=False
+            ),
+            yaxis=dict(visible=False),  # Hide y-axis
+            margin=dict(l=10, r=10, t=40, b=20),  # Compact margins
+            height=300,  # Adjust height
+            showlegend=False,  # Hide legend
+        )
+
+        # Display the figure in Streamlit
+        st.plotly_chart(fig, use_container_width=True)
+
     else:
         st.toast("No matching cars found to determine a price range.")
-
 
 if __name__ == "__main__":
     background_fig()
     st.title("🚗Used Car Price Predictor")
-    df=get_data() # get dataset csv
+    conn,cursor=build_connection_with_database()
 
+    df=get_data(conn) # get dataset csv
     # -----------Expander for CSV-------------
     with st.expander("Show the full table"):
         st.write(df)
@@ -259,7 +330,7 @@ if __name__ == "__main__":
 
     # ---------Train KBest Selector ---------
     selector=trainKBestSelector(df_encoded)
-    important_features=getKBestFeatures(selector,df_encoded) # e.g. ["mileage", "year","color"]
+    important_features=getKBestFeatures(selector, df_encoded, df) # e.g. ["mileage", "year","color"]
     important_features.append("price")
     # st.write(important_features)
     # --------Train Random Forest Regressor ------- 
@@ -269,7 +340,7 @@ if __name__ == "__main__":
     randomForestRegressor=trainRandomForestRegressor(df_important_encoded)
 
     # -------- Show the importance data as a table
-    stream_data_md("## 🔍 What Factors Matter Most?")
+    stream_data_md("## 🔍 What Factors Matter?")
     # Get the feature importance
     importance_df = findImportantFeatures(randomForestRegressor, df_important_encoded)
     # Create a single container for both the chart and the feature output
@@ -304,10 +375,10 @@ if __name__ == "__main__":
     model=st.selectbox(
             "Model",options=cleaned_df[cleaned_df['make'] == make]['model'].unique(),
             index=0)
-    # year=st.number_input("Year",min_value=2000,max_value=2024,step=1,value=2021)
+    year=st.number_input("Year",min_value=2000,max_value=2024,step=1,value=2021)
     feature_input_map={
         'mileage': lambda: st.number_input("Mileage", 0, 200000, step=1000,value=30000),
-        'year':lambda:st.number_input("Year", 2010, date.today().year+1, step=1,value=2020),
+        # 'year':lambda:st.number_input("Year", 2010, date.today().year+1, step=1,value=2020),
         'make': lambda:make,
         'model':lambda:st.selectbox(
             "Model",options=cleaned_df[cleaned_df['make'] == make]['model'].unique(),
@@ -325,32 +396,31 @@ if __name__ == "__main__":
         "fuel":lambda:st.selectbox("Fuel",options=cleaned_df[cleaned_df['make'] == make]['fuel'].unique(),index=0),
         "bed_length":lambda:st.selectbox("Bed Length (Truck Only)",options=cleaned_df[cleaned_df['make'] == make]['bed_length'].unique(),index=0),                   
     }
-
-    
     
     with st.form(key="user_car_info"):
         st.subheader("Enter Your Car's Information!")
-        user_input={"make":make,"model":model}
+        user_input={"make":make,"model":model,"year":year}
         col1,col2,col3=st.columns(3)
         columns=[col1,col2,col3]
         counter=0
         for feature in important_features:
-            if feature !='make' and feature!='price' and feature!='model':
+            if feature !='make' and feature!='price' and feature!='model' and feature!='year':
                 with columns[counter%3]:
                     user_input[feature]=feature_input_map[feature]()
                 counter+=1
         submit=st.form_submit_button("Predict",type="primary")
-        
+    
+    # Add an image as divider
+    img = st.image("price.png", use_container_width="auto")
+
     # Define the specific car's attributes
     car_attributes = {
-        "make":make,
+        "make": make,
         "model": model,
-        "year": feature_input_map["year"]
+        "year": year
     }
-    
     if submit:
         tab1,tab2=st.tabs(["Predicted Report","Nice price?"])
-        st.write(user_input)
         with tab1:
             predict_price=predictByRandomForest(randomForestRegressor,user_input,df_important_encoded)
             original_price=int(original_price)
@@ -360,8 +430,7 @@ if __name__ == "__main__":
             if min_price is None or max_price is None:
                 st.toast("No matching cars found to determine a price range.")
                 with st.spinner("Thinking..."):
-                    time.sleep(2) # sleep 2s
-                    st.write("No matching cars found to determine a price range")
+                    time.sleep(1) # sleep 1s
             else:
                 price_compare(min_price, max_price, predict_price, car_attributes)
-    
+

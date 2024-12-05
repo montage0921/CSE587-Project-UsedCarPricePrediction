@@ -16,7 +16,7 @@ from sklearn.metrics import root_mean_squared_error, r2_score
 from catboost import CatBoostRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
-import main as ma
+import homepage as ma
 
 train_para_flag = False
 train_all_para_flag = False

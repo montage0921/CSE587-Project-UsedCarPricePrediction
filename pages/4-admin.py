@@ -7,11 +7,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import date,time
 import numpy as np
-from search_widgets_render import *
-from search_result_logic import *
-from edit_logic import *
-from delete_logic import *
-from add_logic import *
+from Database_Operation.add_logic import *
+from Database_Operation.search_result_logic import *
+from Database_Operation.edit_logic import *
+from Database_Operation.delete_logic import *
+from Database_Operation.add_logic import *
 
 # --------------- Authentication --------------------
 with open('config.yaml') as file:

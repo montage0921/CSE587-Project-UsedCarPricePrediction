@@ -375,12 +375,3 @@ if __name__ == "__main__":
         for feature, accuracy in zip(x_label, y_label):
             st.write(f"- **{feature}**: {accuracy:.2f}%")
 
-    st.markdown("### **Not recommended**")
-    train_para_flag = st.checkbox("Train model parameters for selected number", value=False)
-    train_all_para_flag = st.checkbox("Train model parameters for all features", value=False)
-    if train_para_flag:
-        st.write("Training model parameters for the selected number...")
-
-    if train_all_para_flag:
-        st.write("Training model parameters for all features...")
-

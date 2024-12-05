@@ -24,42 +24,13 @@ feature_number = 9
 test_flag = True
 update_ymal_flag = False
 
-
-# def findKeyFeaturesByRandomForest(_selector, df_encoded, df):
-#     # Get feature importances from the selector and extract the top 50 features
-#     feature_importances = _selector.feature_importances_
-#     selected_features = np.argsort(feature_importances)[-100:]
-
-#     # Get feature names
-#     df_encoded_without_price = df_encoded.drop(columns=['price'])
-#     selected_feature_names = df_encoded_without_price.columns[selected_features].tolist()
-#     all_column_names = df.columns.tolist()
-
-#     # Extract the base feature names
-#     base_feature_names = set()
-#     for name in all_column_names:
-#         for selected_name in selected_feature_names:
-#             if name in selected_name:
-#                 base_feature_names.add(name)
-
-#     base_feature_names = list(base_feature_names)
-
-#     # # Save to YAML file if test_flag is True
-#     # if test_flag:
-#     #     yaml_file_name = "importance_feature.yaml"
-#     #     with open(yaml_file_name, 'w') as file:
-#     #         yaml.dump(base_feature_names, file)
-#     #     st.success(f"Base feature names saved to {yaml_file_name}")
-
-#     return base_feature_names
-
 def findKeyFeaturesByRandomForest(_selector, df_encoded, df):
     # Get feature importances and their indices
     feature_importances = _selector.feature_importances_
     sorted_indices = np.argsort(feature_importances)  # Indices sorted in ascending order
 
     # Get the top N feature indices
-    top_indices = sorted_indices[-100:]  # Select top N features
+    top_indices = sorted_indices[-100:]
     top_indices = top_indices[::-1]  # Reverse to descending for top features
 
     # Get encoded feature names

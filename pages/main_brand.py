@@ -11,13 +11,40 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
 from xgboost import XGBRegressor
 import seaborn as sns
+import pymysql
+import yaml
+from yaml.loader import SafeLoader
 # -------------- Constant ----------------------
 kBest=10
 
-# read data from csv
+with open('../config.yaml') as file:
+    config=yaml.load(file,Loader=SafeLoader)
+
+@st.cache_resource
+def connect_to_database():
+    conn = pymysql.connect(
+        host=config['credentials']['database']['host'],
+        port=3306,
+        user=config['credentials']['database']['user'],
+        password=config['credentials']['database']['password'],
+        database=config['credentials']['database']['database']
+    )
+    return conn
+
+
+# @st.cache_resource(show_spinner="Connecting to database...")
+def build_connection_with_database():
+    conn=connect_to_database()
+    cursor=conn.cursor()
+    st.toast("Connect to database successfully!")
+    return (conn,cursor)
+
+# read data from sql
 @st.cache_data
-def get_data():
-    df=pd.read_csv("../cleaned_for_sql.csv")
+def get_data(_conn):
+    extract_all_query="""SELECT * FROM used_cars"""
+    df=pd.read_sql(extract_all_query,_conn)
+    df = df.drop(columns=["id"])
     return df
 
 # data cleaning
@@ -114,7 +141,9 @@ def predictByRandomForest(_model,user_input,df_important_encoded):
 
 
 if __name__ == "__main__":
-   
+    conn,cursor=build_connection_with_database()
+
+    df=get_data(conn) # get dataset csv
 
     st.title("Brand Analysis")
     st.write("Analyze the influence of different brands on car prices using XGBoost.")

@@ -38,7 +38,7 @@ def connect_to_database():
 def build_connection_with_database():
     conn=connect_to_database()
     cursor=conn.cursor()
-    st.write("Connect to database successfully!")
+    st.toast("Connect to database successfully!")
     return (conn,cursor)
 
 
@@ -89,22 +89,6 @@ def trainKBestSelector(df):
 
     return selector
 
-# # get the best feature
-# @st.cache_data(show_spinner=f"selecting the best features ")
-# def getKBestFeatures(_selector,df):
-#     selected_features = _selector.get_support(indices = True)
-#     df_without_price=df.drop(columns=['price'])
-#     selected_feature_names = df_without_price.columns[selected_features]
-
-#     # Extract the base feature names
-#     base_feature_names = list(set([
-#     '_'.join(name.split('_')[:-1]) if '_' in name else name
-#     for name in selected_feature_names
-# ]))
-#     st.write(base_feature_names)
-
-#     return base_feature_names
-
 @st.cache_data(show_spinner="Selecting the best features")
 def getKBestFeatures(_selector, df_encoded, df):
     selected_features = _selector.get_support(indices=True)
@@ -122,7 +106,6 @@ def getKBestFeatures(_selector, df_encoded, df):
     
     base_feature_names = list(base_feature_names)
     return base_feature_names
-
 
 
 @st.cache_resource(show_spinner="Training random forest regressor")
@@ -411,7 +394,12 @@ if __name__ == "__main__":
         submit=st.form_submit_button("Predict",type="primary")
     
     # Add an image as divider
-    img = st.image("price.png", use_container_width="auto")
+    image_url = "https://www.price2spy.com/blog/wp-content/uploads/2021/03/price-image.png"
+
+    # Center the image using columns
+    col1, col2, col3 = st.columns([1, 2, 1])  # Adjust the ratios for centering
+    with col2:
+        st.image(image_url, caption=None, use_container_width=True)
 
     # Define the specific car's attributes
     car_attributes = {

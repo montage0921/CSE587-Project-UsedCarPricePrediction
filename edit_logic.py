@@ -8,7 +8,6 @@ def edit_widget():
         edit_btn=st.form_submit_button("Edit")
     return edit_btn,id
 
-@st.cache_data
 def get_by_id(id,_cursor):
     query_getById="SELECT * FROM used_cars where id=%s"
     _cursor.execute(query_getById,(id,))
@@ -111,6 +110,7 @@ def render_update_widget(_conn,_cursor,res):
             submitted = st.form_submit_button("Submit Update")
             if submitted:
                 update_electric_car_details(_conn,_cursor,general,electric_car)
+                
     else:
         with st.form("gas_car_update"):
             st.subheader("Update Gas Car Details")
@@ -199,6 +199,7 @@ def update_gas_car_details(_conn,_cursor,general,gas):
 
 
 def update_electric_car_details(_conn, _cursor,general,electric):
+    
     query = """
         UPDATE used_cars
         SET year = %s,

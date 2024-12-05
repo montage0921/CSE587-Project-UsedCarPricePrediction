@@ -156,6 +156,7 @@ if st.session_state["authentication_status"]:
             res = get_by_id(st.session_state.edit_id, cursor)
             if res:
                 render_update_widget(conn, cursor, res)
+                refresh_general_info()
             else:
                 st.warning(f"No record found with ID {st.session_state.edit_id}")
 

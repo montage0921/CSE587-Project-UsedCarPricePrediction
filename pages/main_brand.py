@@ -17,7 +17,7 @@ from yaml.loader import SafeLoader
 # -------------- Constant ----------------------
 kBest=10
 
-with open('../config.yaml') as file:
+with open('config.yaml') as file:
     config=yaml.load(file,Loader=SafeLoader)
 
 @st.cache_resource
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     st.title("Brand Analysis")
     st.write("Analyze the influence of different brands on car prices using XGBoost.")
 
-    data = pd.read_csv("../cleaned_for_sql.csv")
+    data = df
 
     select_columns = ['make', 'model', 'price', 'year', 'mileage', 'owners']
     data = data.dropna(subset=select_columns)

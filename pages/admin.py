@@ -135,6 +135,7 @@ if st.session_state["authentication_status"]:
     with tab1:
         st.subheader("🔍Search A Record")
         select_all = st.radio("Search from all cars?", options=["Yes", "No"], horizontal=True)
+        df = st.session_state["df"]
         if select_all == "No":
             df = st.session_state["df"]
             display_search_UI(df)

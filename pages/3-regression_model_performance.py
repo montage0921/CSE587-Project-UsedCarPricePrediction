@@ -6,10 +6,10 @@ import pymysql
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from search_result_logic import *
-from edit_logic import *
-from delete_logic import *
-from add_logic import *
+from Database_Operation.search_result_logic import *
+from Database_Operation.edit_logic import *
+from Database_Operation.delete_logic import *
+from Database_Operation.add_logic import *
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import root_mean_squared_error, r2_score

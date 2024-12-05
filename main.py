@@ -377,7 +377,8 @@ if __name__ == "__main__":
         "interior_color":lambda:st.selectbox("Interior Color",options=cleaned_df[cleaned_df['make'] == make]['interior_color'].unique(),index=0),
         "miles_per_gallon":lambda:st.selectbox("Miles Per Gallon",options=cleaned_df[cleaned_df['make'] == make]['miles_per_gallon'].unique(),index=0),
         "fuel":lambda:st.selectbox("Fuel",options=cleaned_df[cleaned_df['make'] == make]['fuel'].unique(),index=0),
-        "bed_length":lambda:st.selectbox("Bed Length (Truck Only)",options=cleaned_df[cleaned_df['make'] == make]['bed_length'].unique(),index=0),                   
+        "bed_length":lambda:st.selectbox("Bed Length (Truck Only)",options=cleaned_df[cleaned_df['make'] == make]['bed_length'].unique(),index=0),
+        "transmission":lambda:st.selectbox("Transmission",options=cleaned_df[cleaned_df['make'] == make]['transmission'].unique(),index=0)                   
     }
     
     with st.form(key="user_car_info"):

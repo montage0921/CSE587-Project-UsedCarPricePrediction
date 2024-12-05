@@ -21,8 +21,6 @@ import main as ma
 train_para_flag = False
 train_all_para_flag = False
 feature_number = 9
-test_flag = True
-update_ymal_flag = False
 
 def findKeyFeaturesByRandomForest(_selector, df_encoded, df):
     # Get feature importances and their indices
@@ -328,18 +326,19 @@ if __name__ == "__main__":
         ax3.set_ylabel("Accuracy (%)")
         st.pyplot(fig3)
 
-    # -------- User input
-    number_select=st.number_input(label="### *Select the number of features*",min_value=3,max_value=20,step=1,value=9)
-    number = feature_number if not number_select else number_select
-    key_base_feature_list = key_base_feature_names[-number:].tolist()
-
     # Add image 
     image_url = "https://cdn.dribbble.com/users/41854/screenshots/2614190/media/94cbc0074b44f6b76a8c1fc0cdabbe12.gif"
     # Center the image using columns
     col1, col2, col3 = st.columns([1, 2, 1])  # Adjust the ratios for centering
     with col2:
-        st.image(image_url, caption="Thinking......", use_container_width=True)
+        st.image(image_url, caption="The following operations may take some time, please be patient......", use_container_width=True)
     
+    # -------- User input
+    st.markdown("### Try different number of features")
+    number_select=st.number_input(label="Select the number of features",min_value=3,max_value=20,step=1,value=9)
+    number = feature_number if not number_select else number_select
+    key_base_feature_list = key_base_feature_names[-number:].tolist()
+
     # -------- Dynamically compute accuracy of the selected number of features
     best_model_CB_dy, evaluate_CB_dy = CatBoostRegressor_model(key_base_feature_list, cleaned_df)
 
@@ -375,3 +374,13 @@ if __name__ == "__main__":
         st.markdown("### Accuracy Values")
         for feature, accuracy in zip(x_label, y_label):
             st.write(f"- **{feature}**: {accuracy:.2f}%")
+
+    st.markdown("### **Not recommended**")
+    train_para_flag = st.checkbox("Train model parameters for selected number", value=False)
+    train_all_para_flag = st.checkbox("Train model parameters for all features", value=False)
+    if train_para_flag:
+        st.write("Training model parameters for the selected number...")
+
+    if train_all_para_flag:
+        st.write("Training model parameters for all features...")
+

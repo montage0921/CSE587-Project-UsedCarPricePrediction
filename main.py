@@ -175,9 +175,13 @@ def stream_data_md(text, delay=0.1):
         time.sleep(delay)  # Add delay for streaming effect
 
 def background_fig():
-
     # Set page configuration to wide layout
-    st.set_page_config(layout="wide")
+    st.set_page_config(
+        page_title="Homepage",
+        page_icon="🏠",
+        layout="wide",
+        initial_sidebar_state="auto"
+    )
 
     # HTML and CSS for the background image with overlay text and button
     st.markdown(

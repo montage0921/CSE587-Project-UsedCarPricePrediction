@@ -1,8 +1,8 @@
 # CSE587-Project-UsedCarPricePrediction
 
-Predicting Used Car Market Value Using Machine Learning with Data Collected from Online Trading Platforms and Public Datasets
+This README.md only covers the source code for Phase I and Phase II. The source code for Phase III (Data Product) is located in the master branch. A separate README.md in the master branch provides detailed information about the folder structure and app building process.
 
-Please put your team's information here. delete this message after you have done so.
+Predicting Used Car Market Value Using Machine Learning with Data Collected from Online Trading Platforms and Public Datasets
 
 Team Number: 2  
 Team Member:  

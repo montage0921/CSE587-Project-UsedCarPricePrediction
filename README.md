@@ -11,20 +11,22 @@ Team Member:
 
 ## File Descriptions
 
-- **`pages/`**: Folder for managing pages and their corresponding logic.
-- **`.gitignore`**: Specifies files and directories that Git should ignore.
-- **`README.md`**: Documentation file for the master branch.
-- **`add_logic.py`**: Implements the logic for adding new entries to the dataset.
-- **`carinfo_after_pre_clean.csv`**: Intermediate dataset after initial cleaning.
-- **`cleaned_for_sql.csv`**: Dataset formatted for SQL insertion and database storage.
-- **`config.yaml`**: Configuration file containing customizable settings.
-- **`data_upload.py`**: Handles uploading data to the system.
-- **`delete_logic.py`**: Logic for removing data entries.
-- **`edit_logic.py`**: Fixes and updates for editing existing data entries.
-- **`homepage.py`**: Manages logic for the homepage.
-- **`price.png`**: Image resource used in the project (e.g., for UI or reports).
-- **`requirements.txt`**: List of Python libraries required for the project.
-- **`search_result_logic.py`**: Logic for processing and displaying search results.
-- **`search_widgets_render.py`**: Renders widgets for the search interface.
-
----
+.
+├── Database_Operation/
+│ ├── add_logic.py
+│ ├── data_upload.py
+│ ├── delete_logic.py
+│ ├── edit_logic.py
+│ ├── search_result_logic.py
+│ └── search_widgets_render.py
+├── pages/
+│ ├── 1-brand_analysis.py
+│ ├── 2-accident_history_prediction.py
+│ ├── 3-regression_model_performance.py
+│ └── 4-admin.py
+├── .gitignore
+├── README.md
+├── config.yaml
+├── homepage.py
+├── price.png
+└── requirements.txt

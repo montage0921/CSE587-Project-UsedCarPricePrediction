@@ -9,6 +9,9 @@ Team Member:
 ● 50602483 Jiabao Yao jyao27@buffalo.edu  
 ● 50606804 Chao Wu cwu64@buffalo.edu
 
+## The questions listed for each team member && The information of where the experiment code associated with each question is located && The analysis of the question is located
+Refer to the `main` branch `readme.md`
+
 ## File Descriptions
 
 ```

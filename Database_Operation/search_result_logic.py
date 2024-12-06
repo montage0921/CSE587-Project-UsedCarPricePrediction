@@ -1,5 +1,5 @@
 import streamlit as st
-from search_widgets_render import *
+from .search_widgets_render import *
 import pandas as pd
 
 def display_search_UI(df):

@@ -9,6 +9,7 @@ from datetime import date,time
 import numpy as np
 from Database_Operation.add_logic import *
 from Database_Operation.search_result_logic import *
+from Database_Operation.search_widgets_render import *
 from Database_Operation.edit_logic import *
 from Database_Operation.delete_logic import *
 from Database_Operation.add_logic import *

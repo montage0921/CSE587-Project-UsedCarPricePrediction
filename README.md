@@ -10,6 +10,7 @@ Team Member:
 ● 50606804 Chao Wu cwu64@buffalo.edu
 
 ## The questions listed for each team member && The information of where the experiment code associated with each question is located && The analysis of the question is located
+
 Refer to the `main` branch `readme.md`
 
 ## File Descriptions
@@ -29,6 +30,7 @@ Refer to the `main` branch `readme.md`
 │ ├── 3-regression_model_performance.py # Evaluates regression model performance
 │ └── 4-admin.py # Admin page for CRUD operations
 ├── .gitignore # Specifies files and directories to be ignored by Git
+├── Demonstration of Our Product.mp4 # Demonstration of our product
 ├── README.md # Documentation for the master branch
 ├── config.yaml # Configuration file for database and admin credentials
 ├── homepage.py # Homepage script for the Streamlit application

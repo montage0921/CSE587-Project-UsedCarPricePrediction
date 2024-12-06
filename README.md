@@ -32,3 +32,26 @@ Team Member:
 ├── price.png # Image used in the project
 └── requirements.txt # List of dependencies required for the project
 ```
+
+## Build the App from source code
+
+1. **Clone or Download the Repository**  
+   Clone the master branch using Git or download the project as a ZIP file:
+
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. Install Required Libraries
+   Navigate to the project directory and install the necessary dependencies using the following command:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the Application
+   Open a terminal, navigate to the project directory, and use the following command to start the application:
+   ```bash
+   streamlit run homepage.py
+   ```
+   The application is also deployed online, powered by Render. You can access the live version of the app at the following link:
+
+https://cse587-project-usedcarpriceprediction.onrender.com

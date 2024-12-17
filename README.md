@@ -11,6 +11,29 @@ Team Member:
 ● 50602483 Jiabao Yao jyao27@buffalo.edu  
 ● 50606804 Chao Wu cwu64@buffalo.edu
 
+# HIGHLIGHT
+>Phase I/Data Scrape/Car_Info.py
+contains a scraping script we designed and developed from scratch using Selectolax and Playwright to collect our dataset.
+
+>Phase II/Model_Q1_2_Te_Shi/gbc_mileage.ipynb
+>Phase II/Model_Q1_2_Te_Shi/generate_uncommon.ipynb
+"Use Gradient Boosting Classifier in conjunction with a customized sampling algorithm to predict mileage ranges of a car.
+
+>/Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_Model(Q3_Q4).ipynb
+Use SelectKBest to perform feature selection and CatBoostClassifier with GridSearchCV to analyze the relationship between fuel type and other features.
+
+>Phase II/Model_Q5_6_Chao_Wu/brand_price_q5.py
+Using an XGBoost model and an LSTM neural network to analyze the impact of brand on resale values.
+
+>Phase II/Model_Q7_8_Shijie_Zhou/NeuralNetworkClassifier(Q7)p2.ipynb
+Build a neural network classifier to predict accident probability.
+
+>Master branch: pages/4-admin.py + Database_Operation
+An interactive admin page with authentication that allows users to perform CRUD operations on an SQL database, built on AWS RDS, in a user-friendly way
+
+>Master branch:homepage.py
+A modern UI page that provides car price predictions built using Streamlit
+
 # Phase I
 
 > Report

@@ -19,7 +19,7 @@ contains a scraping script we designed and developed from scratch using Selectol
 >Phase II/Model_Q1_2_Te_Shi/gbc_mileage.ipynb
 >Phase II/Model_Q1_2_Te_Shi/generate_uncommon.ipynb
 
-"Use Gradient Boosting Classifier in conjunction with a customized sampling algorithm to predict mileage ranges of a car.
+Use Gradient Boosting Classifier in conjunction with a customized sampling algorithm to predict mileage ranges of a car.
 
 >/Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_Model(Q3_Q4).ipynb
 

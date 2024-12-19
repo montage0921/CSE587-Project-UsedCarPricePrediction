@@ -23,7 +23,7 @@ Use Gradient Boosting Classifier in conjunction with a customized sampling algor
 
 >/Phase II/Model_Q3_4_Jiabao_Yao/color_fuel_vs_price_Model(Q3_Q4).ipynb
 
-Use SelectKBest to perform feature selection and CatBoostClassifier with GridSearchCV to analyze the relationship between fuel type and other features.
+Use SelectKBest and Random Forest to perform feature selection and CatBoostClassifier with GridSearchCV to analyze the relationship between fuel type and other features.
 
 >Phase II/Model_Q5_6_Chao_Wu/brand_price_q5.py
 

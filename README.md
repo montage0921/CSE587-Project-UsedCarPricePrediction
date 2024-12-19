@@ -1,6 +1,6 @@
 # CSE587-Project-UsedCarPricePrediction
 
-This README.md only covers the source code for Phase I and Phase II. The source code for Phase III (Data Product) is located in the master branch. A separate README.md in the master branch provides detailed information about the folder structure and app building process.
+This README.md only covers the source code for Phase I and Phase II. The source code for Phase III (Data Product) is located in the master branch. A separate README.md in the `master` branch provides detailed information about the folder structure and app building process.
 
 Predicting Used Car Market Value Using Machine Learning with Data Collected from Online Trading Platforms and Public Datasets
 
